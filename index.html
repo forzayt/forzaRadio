@@ -3,12 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IA Unlimited Radio (Shuffled)</title>
+  <title>ForzaRadio - IA Music Player</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="config.js"></script>
 </head>
 <body>
-  <h2>Internet Archive Music Radio</h2>
-  <audio id="radio-player" controls autoplay></audio>
-  <ul id="musicList"></ul>
+  <div class="container">
+    <!-- Top Bar -->
+    <div class="header">
+      <div class="playlist-title">ForzaRadio - IA Music Collection</div>
+      <div class="header-controls">
+        <i class="fas fa-thumbtack" title="Pin"></i>
+        <i class="fas fa-user" title="Profile"></i>
+        <i class="fas fa-music" title="Music Library"></i>
+        <i class="fas fa-ellipsis-h" title="More Options"></i>
+        <i class="fas fa-expand" title="Fullscreen"></i>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="album-art-container">
+        <img id="albumArt" class="album-art" alt="Album Art">
+      </div>
+      
+      <!-- Music List (Hidden by default) -->
+      <ul id="musicList"></ul>
+    </div>
+
+    <!-- Bottom Player Controls -->
+    <div class="player-controls">
+      <!-- Left: Song Info -->
+      <div class="song-info">
+        <img id="songThumbnail" class="song-thumbnail" alt="Song Thumbnail">
+        <div class="song-details">
+          <div id="songTitle" class="song-title">Loading...</div>
+          <div class="song-artist">
+            <span id="songArtist">Internet Archive</span>
+            <button class="add-to-playlist" title="Add to Playlist">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center: Playback Controls -->
+      <div class="center-controls">
+        <div class="playback-controls">
+          <button class="control-btn" id="shuffleBtn" title="Shuffle">
+            <i class="fas fa-random"></i>
+          </button>
+          <button class="control-btn" id="prevBtn" title="Previous">
+            <i class="fas fa-step-backward"></i>
+          </button>
+          <button class="control-btn play-pause-btn" id="playPauseBtn" title="Play/Pause">
+            <i class="fas fa-play" id="playIcon"></i>
+          </button>
+          <button class="control-btn" id="nextBtn" title="Next">
+            <i class="fas fa-step-forward"></i>
+          </button>
+          <button class="control-btn" id="repeatBtn" title="Repeat">
+            <i class="fas fa-redo"></i>
+          </button>
+        </div>
+        
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="time-display">
+            <span id="currentTime">0:00</span>
+            <span id="totalTime">0:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Utility Controls -->
+      <div class="right-controls">
+        <div class="volume-control">
+          <i class="fas fa-volume-up volume-icon" id="volumeIcon" title="Mute/Unmute"></i>
+          <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80" title="Volume">
+        </div>
+        
+        <div class="utility-controls">
+          <i class="fas fa-compress" title="Mini Player"></i>
+          <i class="fas fa-play" title="Video"></i>
+          <i class="fas fa-list" id="playlistToggle" title="Show Playlist"></i>
+          <i class="fas fa-expand" title="Fullscreen"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden Audio Player -->
+  <audio id="radio-player" preload="metadata"></audio>
 
 <script>
 const uploaderEmail = "vishnusanthoshvr@gmail.com";
@@ -16,8 +105,30 @@ const searchUrl = `https://archive.org/advancedsearch.php?q=uploader:${uploaderE
 
 let items = [];          
 let currentIndex = 0;    
+let isPlaying = false;
+let isShuffled = false;
+let currentSongData = null;
+let currentAlbumArt = null;
+
 const player = document.getElementById("radio-player");
 const musicList = document.getElementById("musicList");
+const albumArt = document.getElementById("albumArt");
+const songThumbnail = document.getElementById("songThumbnail");
+const songTitle = document.getElementById("songTitle");
+const songArtist = document.getElementById("songArtist");
+const playPauseBtn = document.getElementById("playPauseBtn");
+const playIcon = document.getElementById("playIcon");
+const progressBar = document.getElementById("progressBar");
+const progressFill = document.getElementById("progressFill");
+const currentTimeDisplay = document.getElementById("currentTime");
+const totalTimeDisplay = document.getElementById("totalTime");
+const volumeSlider = document.getElementById("volumeSlider");
+const volumeIcon = document.getElementById("volumeIcon");
+const shuffleBtn = document.getElementById("shuffleBtn");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const repeatBtn = document.getElementById("repeatBtn");
+const playlistToggle = document.getElementById("playlistToggle");
 
 // Shuffle helper function
 function shuffleArray(array) {
@@ -27,43 +138,186 @@ function shuffleArray(array) {
   }
 }
 
-// Step 1: Fetch all identifiers
-fetch(searchUrl)
-  .then(res => res.json())
-  .then(data => {
-    if (!data.response || !data.response.docs) return;
+// Format time in MM:SS
+function formatTime(seconds) {
+  if (isNaN(seconds)) return "0:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
 
-    items = data.response.docs
-                  .map(doc => doc.identifier)
-                  .filter(id => /^music/.test(id));
+// Update progress bar
+function updateProgress() {
+  if (player.duration) {
+    const progress = (player.currentTime / player.duration) * 100;
+    progressFill.style.width = `${progress}%`;
+    currentTimeDisplay.textContent = formatTime(player.currentTime);
+    totalTimeDisplay.textContent = formatTime(player.duration);
+  }
+}
 
-    if(items.length === 0){
-      musicList.innerHTML = "<li>No music uploads found</li>";
-      return;
+// Spotify API Configuration
+// const SPOTIFY_CONFIG = {
+//   clientId: 'YOUR_SPOTIFY_CLIENT_ID', // Replace with your Spotify Client ID
+//   clientSecret: 'YOUR_SPOTIFY_CLIENT_SECRET', // Replace with your Spotify Client Secret
+//   redirectUri: window.location.origin // Your app's redirect URI
+// };
+
+let spotifyAccessToken = null;
+let spotifyTokenExpiry = null;
+
+// Get Spotify access token
+async function getSpotifyToken() {
+  try {
+    if (spotifyAccessToken && spotifyTokenExpiry && Date.now() < spotifyTokenExpiry) {
+      return spotifyAccessToken;
     }
 
-    // Shuffle playlist
-    shuffleArray(items);
-
-    // Display list
-    items.forEach(id => {
-      const li = document.createElement("li");
-      li.textContent = id;
-      musicList.appendChild(li);
+    // Client credentials flow (no user authentication required)
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + btoa(SPOTIFY_CONFIG.clientId + ':' + SPOTIFY_CONFIG.clientSecret)
+      },
+      body: 'grant_type=client_credentials'
     });
 
-    // Start at a random index in shuffled list
-    currentIndex = Math.floor(Math.random() * items.length);
+    const data = await response.json();
+    
+    if (data.access_token) {
+      spotifyAccessToken = data.access_token;
+      spotifyTokenExpiry = Date.now() + (data.expires_in * 1000);
+      return spotifyAccessToken;
+    } else {
+      throw new Error('Failed to get Spotify token');
+    }
+  } catch (error) {
+    console.error('Error getting Spotify token:', error);
+    return null;
+  }
+}
 
-    // Start playing
-    playNext();
-  })
-  .catch(err => {
-    console.error("Error fetching IA data:", err);
-    musicList.innerHTML = "<li>Failed to load music list</li>";
-  });
+// Search Spotify for album art based on song title/artist
+async function searchSpotifyAlbumArt(songTitle, artistName) {
+  try {
+    const token = await getSpotifyToken();
+    if (!token) {
+      return getFallbackAlbumArt();
+    }
 
-// Step 2: Play next song
+    // Search for the track on Spotify
+    const searchQuery = encodeURIComponent(`${songTitle} ${artistName}`);
+    const response = await fetch(`https://api.spotify.com/v1/search?q=${searchQuery}&type=track&limit=1`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await response.json();
+    
+    if (data.tracks && data.tracks.items && data.tracks.items.length > 0) {
+      const track = data.tracks.items[0];
+      if (track.album && track.album.images && track.album.images.length > 0) {
+        // Get the highest quality image (first in array is highest quality)
+        return track.album.images[0].url;
+      }
+    }
+    
+    return getFallbackAlbumArt();
+  } catch (error) {
+    console.error('Error searching Spotify:', error);
+    return getFallbackAlbumArt();
+  }
+}
+
+// Get random high-quality image from Spotify
+async function getRandomAlbumArt() {
+  try {
+    // Try to get album art based on current song info
+    if (currentSongData && currentSongData.title) {
+      const albumArt = await searchSpotifyAlbumArt(currentSongData.title, currentSongData.artist);
+      if (albumArt && albumArt !== getFallbackAlbumArt()) {
+        return albumArt;
+      }
+    }
+    
+    // Fallback to random popular tracks
+    const token = await getSpotifyToken();
+    if (token) {
+      const response = await fetch('https://api.spotify.com/v1/playlists/37i9dQZEVXbMDoHDwVN2tF', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      const data = await response.json();
+      if (data.tracks && data.tracks.items && data.tracks.items.length > 0) {
+        const randomTrack = data.tracks.items[Math.floor(Math.random() * data.tracks.items.length)];
+        if (randomTrack.track && randomTrack.track.album && randomTrack.track.album.images && randomTrack.track.album.images.length > 0) {
+          return randomTrack.track.album.images[0].url;
+        }
+      }
+    }
+    
+    return getFallbackAlbumArt();
+  } catch (error) {
+    console.log('Using fallback album art:', error);
+    return getFallbackAlbumArt();
+  }
+}
+
+// Alternative: Use Spotify-like gradient patterns for music themes
+function getSpotifyStyleArt() {
+  const spotifyGradients = [
+    'https://via.placeholder.com/400x400/1DB954/191414?text=Spotify+Style',
+    'https://via.placeholder.com/400x400/1ed760/000000?text=Music+Player',
+    'https://via.placeholder.com/400x400/1fdf64/191414?text=ForzaRadio',
+    'https://via.placeholder.com/400x400/1db954/000000?text=IA+Music',
+    'https://via.placeholder.com/400x400/1ed760/191414?text=Album+Art',
+    'https://via.placeholder.com/400x400/1fdf64/000000?text=Music+Collection'
+  ];
+  return spotifyGradients[Math.floor(Math.random() * spotifyGradients.length)];
+}
+
+// Fallback album art with Spotify-inspired patterns
+function getFallbackAlbumArt() {
+  return getSpotifyStyleArt();
+}
+
+// Update UI with song info
+async function updateSongInfo(songData) {
+  currentSongData = songData;
+  songTitle.textContent = songData.title || "Unknown Title";
+  songArtist.textContent = songData.artist || "Unknown Artist";
+  
+  // Get new random album art for each song
+  try {
+    currentAlbumArt = await getRandomAlbumArt();
+    albumArt.src = currentAlbumArt;
+    songThumbnail.src = currentAlbumArt;
+  } catch (error) {
+    console.log('Error loading album art:', error);
+    currentAlbumArt = getFallbackAlbumArt();
+    albumArt.src = currentAlbumArt;
+    songThumbnail.src = currentAlbumArt;
+  }
+}
+
+// Play/Pause functionality
+function togglePlayPause() {
+  if (isPlaying) {
+    player.pause();
+    playIcon.className = "fas fa-play";
+    isPlaying = false;
+  } else {
+    player.play();
+    playIcon.className = "fas fa-pause";
+    isPlaying = true;
+  }
+}
+
+// Play next song
 function playNext() {
   if(items.length === 0) return;
 
@@ -82,8 +336,20 @@ function playNext() {
         return;
       }
 
+      const songData = {
+        title: meta.metadata?.title || id,
+        artist: meta.metadata?.creator || "Internet Archive",
+        artwork: meta.metadata?.image || null,
+        id: id
+      };
+
+      updateSongInfo(songData);
       player.src = `https://archive.org/download/${id}/${encodeURIComponent(mp3File.name)}`;
-      player.play().catch(err => console.log("Autoplay prevented:", err));
+      
+      if (isPlaying) {
+        player.play().catch(err => console.log("Autoplay prevented:", err));
+      }
+      
       currentIndex++;
     })
     .catch(err => {
@@ -93,8 +359,111 @@ function playNext() {
     });
 }
 
-// Step 3: On song end, play next
+// Initialize player
+async function initPlayer() {
+  // Load initial random album art
+  try {
+    currentAlbumArt = await getRandomAlbumArt();
+    albumArt.src = currentAlbumArt;
+    songThumbnail.src = currentAlbumArt;
+  } catch (error) {
+    console.log('Error loading initial album art:', error);
+    currentAlbumArt = getFallbackAlbumArt();
+    albumArt.src = currentAlbumArt;
+    songThumbnail.src = currentAlbumArt;
+  }
+
+  // Step 1: Fetch all identifiers
+  fetch(searchUrl)
+    .then(res => res.json())
+    .then(data => {
+      if (!data.response || !data.response.docs) return;
+
+      items = data.response.docs
+                    .map(doc => doc.identifier)
+                    .filter(id => /^music/.test(id));
+
+      if(items.length === 0){
+        musicList.innerHTML = "<li>No music uploads found</li>";
+        return;
+      }
+
+      // Display list
+      items.forEach(id => {
+        const li = document.createElement("li");
+        li.textContent = id;
+        li.onclick = () => {
+          // Find and play specific song
+          const songIndex = items.indexOf(id);
+          if (songIndex !== -1) {
+            currentIndex = songIndex;
+            playNext();
+          }
+        };
+        musicList.appendChild(li);
+      });
+
+      // Start at a random index
+      currentIndex = Math.floor(Math.random() * items.length);
+
+      // Start playing
+      playNext();
+    })
+    .catch(err => {
+      console.error("Error fetching IA data:", err);
+      musicList.innerHTML = "<li>Failed to load music list</li>";
+    });
+}
+
+// Event Listeners
+playPauseBtn.addEventListener("click", togglePlayPause);
+nextBtn.addEventListener("click", playNext);
+prevBtn.addEventListener("click", () => {
+  currentIndex = Math.max(0, currentIndex - 2);
+  playNext();
+});
+
+shuffleBtn.addEventListener("click", () => {
+  isShuffled = !isShuffled;
+  shuffleBtn.style.opacity = isShuffled ? "1" : "0.8";
+  if (isShuffled) {
+    shuffleArray(items);
+    currentIndex = 0;
+  }
+});
+
+playlistToggle.addEventListener("click", () => {
+  musicList.classList.toggle("show");
+});
+
+volumeSlider.addEventListener("input", (e) => {
+  player.volume = e.target.value / 100;
+});
+
+volumeIcon.addEventListener("click", () => {
+  if (player.volume > 0) {
+    player.volume = 0;
+    volumeSlider.value = 0;
+    volumeIcon.className = "fas fa-volume-mute";
+  } else {
+    player.volume = volumeSlider.value / 100;
+    volumeIcon.className = "fas fa-volume-up";
+  }
+});
+
+progressBar.addEventListener("click", (e) => {
+  const rect = progressBar.getBoundingClientRect();
+  const percent = (e.clientX - rect.left) / rect.width;
+  player.currentTime = percent * player.duration;
+});
+
+// Player event listeners
 player.addEventListener("ended", playNext);
+player.addEventListener("timeupdate", updateProgress);
+player.addEventListener("loadedmetadata", updateProgress);
+
+// Initialize
+initPlayer();
 </script>
 </body>
 </html>
