@@ -1,63 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>ForzaRadio - Non-Stop Music </title>
-    <link rel="icon" id="icon" href="favicon.ico" />
-    <meta name="description" content="ForzaRadio - A non-stop radio player that streams music from Internet Archive collections. Enjoy continuous music streaming with shuffle and sequential playback modes.">
-    <meta name="keywords" content="ForzaRadio, Internet Archive, Music Player, Radio, Streaming, IA Radio">
-    <meta name="author" content="ForzaRadio">
-    
-    <link rel="stylesheet" href="assets/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA Unlimited Radio (Shuffled)</title>
 </head>
 <body>
-  <div class="wrapper">
-    <div class="top-bar">
-      <div class="top-play-pause">
-        <i class="material-icons play">play_arrow</i>
-      </div>
-      <span>Now Playing</span>
-      <i class="material-icons fullscreen-toggle" id="fullscreen-toggle" title="Toggle Fullscreen">fullscreen</i>
-    </div>
-    <div class="img-area">
-      <img src="" alt="Music Image">
-    </div>
-    <div class="song-details">
-      <p class="name"></p>
-      <p class="artist"></p>
-    </div>
-    <div class="progress-area">
-      <div class="progress-bar">
-        <audio id="main-audio" src=""></audio>
-      </div>
-      <div class="song-timer">
-        <span class="current-time">0:00</span>
-        <span class="max-duration">0:00</span>
-      </div>
-    </div>
-    <div class="controls">
-      <!-- Music list button removed as requested -->
-    </div>
-    <div class="music-list">
-      <div class="header">
-        <div class="row">
-          <span>Music list</span>
-        </div>
-        <i id="close" class="material-icons">close</i>
-      </div>
-      <ul>
-        <!-- here li list are coming from js -->
-      </ul>
-    </div>
-  </div>
+  <h2>Internet Archive Music Radio</h2>
+  <audio id="radio-player" controls autoplay></audio>
+  <ul id="musicList"></ul>
 
-  <script src="assets/js/api-config.js"></script>
-  <script src="assets/js/music-list.js"></script>
-  <script src="assets/js/ia-radio.js"></script>
-  <script src="assets/js/forza-radio.js"></script>
+<script>
+const uploaderEmail = "vishnusanthoshvr@gmail.com";
+const searchUrl = `https://archive.org/advancedsearch.php?q=uploader:${uploaderEmail}&fl[]=identifier&output=json&rows=200`;
 
+let items = [];          
+let currentIndex = 0;    
+const player = document.getElementById("radio-player");
+const musicList = document.getElementById("musicList");
+
+// Shuffle helper function
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+// Step 1: Fetch all identifiers
+fetch(searchUrl)
+  .then(res => res.json())
+  .then(data => {
+    if (!data.response || !data.response.docs) return;
+
+    items = data.response.docs
+                  .map(doc => doc.identifier)
+                  .filter(id => /^music/.test(id));
+
+    if(items.length === 0){
+      musicList.innerHTML = "<li>No music uploads found</li>";
+      return;
+    }
+
+    // Shuffle playlist
+    shuffleArray(items);
+
+    // Display list
+    items.forEach(id => {
+      const li = document.createElement("li");
+      li.textContent = id;
+      musicList.appendChild(li);
+    });
+
+    // Start at a random index in shuffled list
+    currentIndex = Math.floor(Math.random() * items.length);
+
+    // Start playing
+    playNext();
+  })
+  .catch(err => {
+    console.error("Error fetching IA data:", err);
+    musicList.innerHTML = "<li>Failed to load music list</li>";
+  });
+
+// Step 2: Play next song
+function playNext() {
+  if(items.length === 0) return;
+
+  if(currentIndex >= items.length) currentIndex = 0;
+  const id = items[currentIndex];
+
+  // Fetch metadata to get actual mp3 file name
+  fetch(`https://archive.org/metadata/${id}`)
+    .then(res => res.json())
+    .then(meta => {
+      const mp3File = meta.files.find(f => f.format && f.format.toLowerCase().includes("mp3"));
+      if(!mp3File) {
+        console.warn("No mp3 found for", id);
+        currentIndex++;
+        playNext(); // skip to next
+        return;
+      }
+
+      player.src = `https://archive.org/download/${id}/${encodeURIComponent(mp3File.name)}`;
+      player.play().catch(err => console.log("Autoplay prevented:", err));
+      currentIndex++;
+    })
+    .catch(err => {
+      console.error("Error fetching metadata for", id, err);
+      currentIndex++;
+      playNext(); // skip to next
+    });
+}
+
+// Step 3: On song end, play next
+player.addEventListener("ended", playNext);
+</script>
 </body>
 </html>
