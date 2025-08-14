@@ -1426,5 +1426,754 @@
     "filename": "убей меня.mp3",
     "image": "убей меня.png",
     "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/%D1%83%D0%B1%D0%B5%D0%B9%20%D0%BC%D0%B5%D0%BD%D1%8F.mp3"
+  },
+  {
+    "title": "ALONE, PART 3",
+    "artist": "Unknown Artist",
+    "filename": "ALONE, PART 3.mp3",
+    "image": "ALONE, PART 3.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/ALONE%2C%20PART%203.mp3"
+  },
+  {
+    "title": "Alive Again",
+    "artist": "Unknown Artist",
+    "filename": "Alive Again.mp3",
+    "image": "Alive Again.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Alive%20Again.mp3"
+  },
+  {
+    "title": "All Girls Are The Same",
+    "artist": "Unknown Artist",
+    "filename": "All Girls Are The Same.mp3",
+    "image": "All Girls Are The Same.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/All%20Girls%20Are%20The%20Same.mp3"
+  },
+  {
+    "title": "Already Dead",
+    "artist": "Unknown Artist",
+    "filename": "Already Dead.mp3",
+    "image": "Already Dead.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Already%20Dead.mp3"
+  },
+  {
+    "title": "Baby Sasuke",
+    "artist": "Unknown Artist",
+    "filename": "Baby Sasuke.mp3",
+    "image": "Baby Sasuke.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Baby%20Sasuke.mp3"
+  },
+  {
+    "title": "Backseat",
+    "artist": "Unknown Artist",
+    "filename": "Backseat.mp3",
+    "image": "Backseat.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Backseat.mp3"
+  },
+  {
+    "title": "Bigger Than Life",
+    "artist": "Unknown Artist",
+    "filename": "Bigger Than Life.mp3",
+    "image": "Bigger Than Life.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Bigger%20Than%20Life.mp3"
+  },
+  {
+    "title": "Body Loud",
+    "artist": "Unknown Artist",
+    "filename": "Body Loud.mp3",
+    "image": "Body Loud.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Body%20Loud.mp3"
+  },
+  {
+    "title": "Cinderella",
+    "artist": "Unknown Artist",
+    "filename": "Cinderella.mp3",
+    "image": "Cinderella.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Cinderella.mp3"
+  },
+  {
+    "title": "Come to Life",
+    "artist": "Unknown Artist",
+    "filename": "Come to Life.mp3",
+    "image": "Come to Life.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Come%20to%20Life.mp3"
+  },
+  {
+    "title": "DO IT",
+    "artist": "Unknown Artist",
+    "filename": "DO IT.mp3",
+    "image": "DO IT.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/DO%20IT.mp3"
+  },
+  {
+    "title": "Dangerous",
+    "artist": "Unknown Artist",
+    "filename": "Dangerous.mp3",
+    "image": "Dangerous.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Dangerous.mp3"
+  },
+  {
+    "title": "Demons and Angels (feat. Juice WRLD)",
+    "artist": "Unknown Artist",
+    "filename": "Demons and Angels (feat. Juice WRLD).mp3",
+    "image": "Demons and Angels (feat. Juice WRLD).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Demons%20and%20Angels%20(feat.%20Juice%20WRLD).mp3"
+  },
+  {
+    "title": "Dreamcatcher (feat. Swae Lee & Travis Scott)",
+    "artist": "Unknown Artist",
+    "filename": "Dreamcatcher (feat. Swae Lee & Travis Scott).mp3",
+    "image": "Dreamcatcher (feat. Swae Lee & Travis Scott).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Dreamcatcher%20(feat.%20Swae%20Lee%20%26%20Travis%20Scott).mp3"
+  },
+  {
+    "title": "Drive You Insane",
+    "artist": "Unknown Artist",
+    "filename": "Drive You Insane.mp3",
+    "image": "Drive You Insane.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Drive%20You%20Insane.mp3"
+  },
+  {
+    "title": "Empire State Of Mind",
+    "artist": "Unknown Artist",
+    "filename": "Empire State Of Mind.mp3",
+    "image": "Empire State Of Mind.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Empire%20State%20Of%20Mind.mp3"
+  },
+  {
+    "title": "Erase Your Social",
+    "artist": "Unknown Artist",
+    "filename": "Erase Your Social.mp3",
+    "image": "Erase Your Social.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Erase%20Your%20Social.mp3"
+  },
+  {
+    "title": "Everybody Dies In Their Nightmares",
+    "artist": "Unknown Artist",
+    "filename": "Everybody Dies In Their Nightmares.mp3",
+    "image": "Everybody Dies In Their Nightmares.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Everybody%20Dies%20In%20Their%20Nightmares.mp3"
+  },
+  {
+    "title": "Ex Bitch",
+    "artist": "Unknown Artist",
+    "filename": "Ex Bitch.mp3",
+    "image": "Ex Bitch.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Ex%20Bitch.mp3"
+  },
+  {
+    "title": "Eyes On You",
+    "artist": "Unknown Artist",
+    "filename": "Eyes On You.mp3",
+    "image": "Eyes On You.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Eyes%20On%20You.mp3"
+  },
+  {
+    "title": "FEEL",
+    "artist": "Unknown Artist",
+    "filename": "FEEL.mp3",
+    "image": "FEEL.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/FEEL.mp3"
+  },
+  {
+    "title": "Fast",
+    "artist": "Unknown Artist",
+    "filename": "Fast.mp3",
+    "image": "Fast.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Fast.mp3"
+  },
+  {
+    "title": "Fatal Attraction",
+    "artist": "Unknown Artist",
+    "filename": "Fatal Attraction.mp3",
+    "image": "Fatal Attraction.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Fatal%20Attraction.mp3"
+  },
+  {
+    "title": "Fear of God",
+    "artist": "Unknown Artist",
+    "filename": "Fear of God.mp3",
+    "image": "Fear of God.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Fear%20of%20God.mp3"
+  },
+  {
+    "title": "Fill The Void (with Lily Rose Depp, Ramsey)",
+    "artist": "Unknown Artist",
+    "filename": "Fill The Void (with Lily Rose Depp, Ramsey).mp3",
+    "image": "Fill The Void (with Lily Rose Depp, Ramsey).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Fill%20The%20Void%20(with%20Lily%20Rose%20Depp%2C%20Ramsey).mp3"
+  },
+  {
+    "title": "Finer Things",
+    "artist": "Unknown Artist",
+    "filename": "Finer Things.mp3",
+    "image": "Finer Things.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Finer%20Things.mp3"
+  },
+  {
+    "title": "Funds",
+    "artist": "Unknown Artist",
+    "filename": "Funds.mp3",
+    "image": "Funds.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Funds.mp3"
+  },
+  {
+    "title": "Girl Of My Dreams (with SUGA of BTS)",
+    "artist": "Unknown Artist",
+    "filename": "Girl Of My Dreams (with SUGA of BTS).mp3",
+    "image": "Girl Of My Dreams (with SUGA of BTS).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Girl%20Of%20My%20Dreams%20(with%20SUGA%20of%20BTS).mp3"
+  },
+  {
+    "title": "Go Flex",
+    "artist": "Unknown Artist",
+    "filename": "Go Flex.mp3",
+    "image": "Go Flex.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Go%20Flex.mp3"
+  },
+  {
+    "title": "Goodbyes (feat. Young Thug)",
+    "artist": "Unknown Artist",
+    "filename": "Goodbyes (feat. Young Thug).mp3",
+    "image": "Goodbyes (feat. Young Thug).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Goodbyes%20(feat.%20Young%20Thug).mp3"
+  },
+  {
+    "title": "Got It",
+    "artist": "Unknown Artist",
+    "filename": "Got It.mp3",
+    "image": "Got It.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Got%20It.mp3"
+  },
+  {
+    "title": "HEARTBEAT",
+    "artist": "Unknown Artist",
+    "filename": "HEARTBEAT.mp3",
+    "image": "HEARTBEAT.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/HEARTBEAT.mp3"
+  },
+  {
+    "title": "HONEST",
+    "artist": "Unknown Artist",
+    "filename": "HONEST.mp3",
+    "image": "HONEST.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/HONEST.mp3"
+  },
+  {
+    "title": "Hard Work Pays Off",
+    "artist": "Unknown Artist",
+    "filename": "Hard Work Pays Off.mp3",
+    "image": "Hard Work Pays Off.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Hard%20Work%20Pays%20Off.mp3"
+  },
+  {
+    "title": "Haunted Strip Club",
+    "artist": "Unknown Artist",
+    "filename": "Haunted Strip Club.mp3",
+    "image": "Haunted Strip Club.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Haunted%20Strip%20Club.mp3"
+  },
+  {
+    "title": "HeMotions",
+    "artist": "Unknown Artist",
+    "filename": "HeMotions.mp3",
+    "image": "HeMotions.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/HeMotions.mp3"
+  },
+  {
+    "title": "Hiding",
+    "artist": "Unknown Artist",
+    "filename": "Hiding.mp3",
+    "image": "Hiding.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Hiding.mp3"
+  },
+  {
+    "title": "Hope",
+    "artist": "Unknown Artist",
+    "filename": "Hope.mp3",
+    "image": "Hope.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Hope.mp3"
+  },
+  {
+    "title": "I Fall Apart",
+    "artist": "Unknown Artist",
+    "filename": "I Fall Apart.mp3",
+    "image": "I Fall Apart.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/I%20Fall%20Apart.mp3"
+  },
+  {
+    "title": "I'm All In",
+    "artist": "Unknown Artist",
+    "filename": "I'm All In.mp3",
+    "image": "I'm All In.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/I'm%20All%20In.mp3"
+  },
+  {
+    "title": "I'm Still",
+    "artist": "Unknown Artist",
+    "filename": "I'm Still.mp3",
+    "image": "I'm Still.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/I'm%20Still.mp3"
+  },
+  {
+    "title": "If I",
+    "artist": "Unknown Artist",
+    "filename": "If I.mp3",
+    "image": "If I.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/If%20I.mp3"
+  },
+  {
+    "title": "Jail pt 2",
+    "artist": "Unknown Artist",
+    "filename": "Jail pt 2.mp3",
+    "image": "Jail pt 2.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Jail%20pt%202.mp3"
+  },
+  {
+    "title": "LOYALTY",
+    "artist": "Unknown Artist",
+    "filename": "LOYALTY.mp3",
+    "image": "LOYALTY.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/LOYALTY.mp3"
+  },
+  {
+    "title": "Last Call",
+    "artist": "Unknown Artist",
+    "filename": "Last Call.mp3",
+    "image": "Last Call.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Last%20Call.mp3"
+  },
+  {
+    "title": "Late Night Confessions",
+    "artist": "Unknown Artist",
+    "filename": "Late Night Confessions.mp3",
+    "image": "Late Night Confessions.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Late%20Night%20Confessions.mp3"
+  },
+  {
+    "title": "Let Me Know (I Wonder Why Freestyle)",
+    "artist": "Unknown Artist",
+    "filename": "Let Me Know (I Wonder Why Freestyle).mp3",
+    "image": "Let Me Know (I Wonder Why Freestyle).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Let%20Me%20Know%20(I%20Wonder%20Why%20Freestyle).mp3"
+  },
+  {
+    "title": "Liability",
+    "artist": "Unknown Artist",
+    "filename": "Liability.mp3",
+    "image": "Liability.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Liability.mp3"
+  },
+  {
+    "title": "Lie 2 You",
+    "artist": "Unknown Artist",
+    "filename": "Lie 2 You.mp3",
+    "image": "Lie 2 You.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Lie%202%20You.mp3"
+  },
+  {
+    "title": "Lose Face",
+    "artist": "Unknown Artist",
+    "filename": "Lose Face.mp3",
+    "image": "Lose Face.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Lose%20Face.mp3"
+  },
+  {
+    "title": "Lose Myself",
+    "artist": "Unknown Artist",
+    "filename": "Lose Myself.mp3",
+    "image": "Lose Myself.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Lose%20Myself.mp3"
+  },
+  {
+    "title": "Love Scars 3",
+    "artist": "Unknown Artist",
+    "filename": "Love Scars 3.mp3",
+    "image": "Love Scars 3.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Love%20Scars%203.mp3"
+  },
+  {
+    "title": "Love Sick",
+    "artist": "Unknown Artist",
+    "filename": "Love Sick.mp3",
+    "image": "Love Sick.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Love%20Sick.mp3"
+  },
+  {
+    "title": "Low Life (feat. The Weeknd)",
+    "artist": "Unknown Artist",
+    "filename": "Low Life (feat. The Weeknd).mp3",
+    "image": "Low Life (feat. The Weeknd).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Low%20Life%20(feat.%20The%20Weeknd).mp3"
+  },
+  {
+    "title": "Make Me Feel",
+    "artist": "Unknown Artist",
+    "filename": "Make Me Feel.mp3",
+    "image": "Make Me Feel.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Make%20Me%20Feel.mp3"
+  },
+  {
+    "title": "Mind of Melvin (feat. Lil Uzi Vert)",
+    "artist": "Unknown Artist",
+    "filename": "Mind of Melvin (feat. Lil Uzi Vert).mp3",
+    "image": "Mind of Melvin (feat. Lil Uzi Vert).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Mind%20of%20Melvin%20(feat.%20Lil%20Uzi%20Vert).mp3"
+  },
+  {
+    "title": "Moon",
+    "artist": "Unknown Artist",
+    "filename": "Moon.mp3",
+    "image": "Moon.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Moon.mp3"
+  },
+  {
+    "title": "My Name",
+    "artist": "Unknown Artist",
+    "filename": "My Name.mp3",
+    "image": "My Name.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/My%20Name.mp3"
+  },
+  {
+    "title": "No Heart",
+    "artist": "Unknown Artist",
+    "filename": "No Heart.mp3",
+    "image": "No Heart.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/No%20Heart.mp3"
+  },
+  {
+    "title": "One Night",
+    "artist": "Unknown Artist",
+    "filename": "One Night.mp3",
+    "image": "One Night.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/One%20Night.mp3"
+  },
+  {
+    "title": "Paradise",
+    "artist": "Unknown Artist",
+    "filename": "Paradise.mp3",
+    "image": "Paradise.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Paradise.mp3"
+  },
+  {
+    "title": "Perfect Time",
+    "artist": "Unknown Artist",
+    "filename": "Perfect Time.mp3",
+    "image": "Perfect Time.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Perfect%20Time.mp3"
+  },
+  {
+    "title": "Potion",
+    "artist": "Unknown Artist",
+    "filename": "Potion.mp3",
+    "image": "Potion.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Potion.mp3"
+  },
+  {
+    "title": "Power Trip (feat. Miguel)",
+    "artist": "Unknown Artist",
+    "filename": "Power Trip (feat. Miguel).mp3",
+    "image": "Power Trip (feat. Miguel).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Power%20Trip%20(feat.%20Miguel).mp3"
+  },
+  {
+    "title": "Psycho (feat. Ty Dolla $ign)",
+    "artist": "Unknown Artist",
+    "filename": "Psycho (feat. Ty Dolla $ign).mp3",
+    "image": "Psycho (feat. Ty Dolla $ign).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Psycho%20(feat.%20Ty%20Dolla%20%24ign).mp3"
+  },
+  {
+    "title": "Pursuit Of Happiness (Nightmare)",
+    "artist": "Unknown Artist",
+    "filename": "Pursuit Of Happiness (Nightmare).mp3",
+    "image": "Pursuit Of Happiness (Nightmare).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Pursuit%20Of%20Happiness%20(Nightmare).mp3"
+  },
+  {
+    "title": "RAPSTAR",
+    "artist": "Unknown Artist",
+    "filename": "RAPSTAR.mp3",
+    "image": "RAPSTAR.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/RAPSTAR.mp3"
+  },
+  {
+    "title": "Reborn",
+    "artist": "Unknown Artist",
+    "filename": "Reborn.mp3",
+    "image": "Reborn.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Reborn.mp3"
+  },
+  {
+    "title": "Reply (feat. Lil Uzi Vert)",
+    "artist": "Unknown Artist",
+    "filename": "Reply (feat. Lil Uzi Vert).mp3",
+    "image": "Reply (feat. Lil Uzi Vert).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Reply%20(feat.%20Lil%20Uzi%20Vert).mp3"
+  },
+  {
+    "title": "Ric Flair Drip (with Metro Boomin)",
+    "artist": "Unknown Artist",
+    "filename": "Ric Flair Drip (with Metro Boomin).mp3",
+    "image": "Ric Flair Drip (with Metro Boomin).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Ric%20Flair%20Drip%20(with%20Metro%20Boomin).mp3"
+  },
+  {
+    "title": "Ride for Me",
+    "artist": "Unknown Artist",
+    "filename": "Ride for Me.mp3",
+    "image": "Ride for Me.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Ride%20for%20Me.mp3"
+  },
+  {
+    "title": "Righteous",
+    "artist": "Unknown Artist",
+    "filename": "Righteous.mp3",
+    "image": "Righteous.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Righteous.mp3"
+  },
+  {
+    "title": "Save Your Tears",
+    "artist": "Unknown Artist",
+    "filename": "Save Your Tears.mp3",
+    "image": "Save Your Tears.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Save%20Your%20Tears.mp3"
+  },
+  {
+    "title": "Scream My Name",
+    "artist": "Unknown Artist",
+    "filename": "Scream My Name.mp3",
+    "image": "Scream My Name.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Scream%20My%20Name.mp3"
+  },
+  {
+    "title": "Show Me",
+    "artist": "Unknown Artist",
+    "filename": "Show Me.mp3",
+    "image": "Show Me.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Show%20Me.mp3"
+  },
+  {
+    "title": "Sleepers",
+    "artist": "Unknown Artist",
+    "filename": "Sleepers.mp3",
+    "image": "Sleepers.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Sleepers.mp3"
+  },
+  {
+    "title": "Somebody",
+    "artist": "Unknown Artist",
+    "filename": "Somebody.mp3",
+    "image": "Somebody.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Somebody.mp3"
+  },
+  {
+    "title": "Something Special",
+    "artist": "Unknown Artist",
+    "filename": "Something Special.mp3",
+    "image": "Something Special.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Something%20Special.mp3"
+  },
+  {
+    "title": "Spoil My Night (feat. Swae Lee)",
+    "artist": "Unknown Artist",
+    "filename": "Spoil My Night (feat. Swae Lee).mp3",
+    "image": "Spoil My Night (feat. Swae Lee).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Spoil%20My%20Night%20(feat.%20Swae%20Lee).mp3"
+  },
+  {
+    "title": "Stay",
+    "artist": "Unknown Artist",
+    "filename": "Stay.mp3",
+    "image": "Stay.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Stay.mp3"
+  },
+  {
+    "title": "Summer Games",
+    "artist": "Unknown Artist",
+    "filename": "Summer Games.mp3",
+    "image": "Summer Games.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Summer%20Games.mp3"
+  },
+  {
+    "title": "Summertime",
+    "artist": "Unknown Artist",
+    "filename": "Summertime.mp3",
+    "image": "Summertime.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Summertime.mp3"
+  },
+  {
+    "title": "Take All My Love",
+    "artist": "Unknown Artist",
+    "filename": "Take All My Love.mp3",
+    "image": "Take All My Love.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Take%20All%20My%20Love.mp3"
+  },
+  {
+    "title": "Taking A Walk",
+    "artist": "Unknown Artist",
+    "filename": "Taking A Walk.mp3",
+    "image": "Taking A Walk.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Taking%20A%20Walk.mp3"
+  },
+  {
+    "title": "Talk Dirty",
+    "artist": "Unknown Artist",
+    "filename": "Talk Dirty.mp3",
+    "image": "Talk Dirty.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Talk%20Dirty.mp3"
+  },
+  {
+    "title": "The Machine",
+    "artist": "Unknown Artist",
+    "filename": "The Machine.mp3",
+    "image": "The Machine.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/The%20Machine.mp3"
+  },
+  {
+    "title": "The Same",
+    "artist": "Unknown Artist",
+    "filename": "The Same.mp3",
+    "image": "The Same.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/The%20Same.mp3"
+  },
+  {
+    "title": "The Way Life Goes (feat. Oh Wonder)",
+    "artist": "Unknown Artist",
+    "filename": "The Way Life Goes (feat. Oh Wonder).mp3",
+    "image": "The Way Life Goes (feat. Oh Wonder).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/The%20Way%20Life%20Goes%20(feat.%20Oh%20Wonder).mp3"
+  },
+  {
+    "title": "Topanga",
+    "artist": "Unknown Artist",
+    "filename": "Topanga.mp3",
+    "image": "Topanga.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Topanga.mp3"
+  },
+  {
+    "title": "Violent Crimes",
+    "artist": "Unknown Artist",
+    "filename": "Violent Crimes.mp3",
+    "image": "Violent Crimes.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Violent%20Crimes.mp3"
+  },
+  {
+    "title": "WUSYANAME (feat. Youngboy Never Broke Again & Ty Dolla $ign)",
+    "artist": "Unknown Artist",
+    "filename": "WUSYANAME (feat. Youngboy Never Broke Again & Ty Dolla $ign).mp3",
+    "image": "WUSYANAME (feat. Youngboy Never Broke Again & Ty Dolla $ign).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/WUSYANAME%20(feat.%20Youngboy%20Never%20Broke%20Again%20%26%20Ty%20Dolla%20%24ign).mp3"
+  },
+  {
+    "title": "What You Know Bout Love",
+    "artist": "Unknown Artist",
+    "filename": "What You Know Bout Love.mp3",
+    "image": "What You Know Bout Love.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/What%20You%20Know%20Bout%20Love.mp3"
+  },
+  {
+    "title": "What You Need",
+    "artist": "Unknown Artist",
+    "filename": "What You Need.mp3",
+    "image": "What You Need.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/What%20You%20Need.mp3"
+  },
+  {
+    "title": "When I Dream Of You",
+    "artist": "Unknown Artist",
+    "filename": "When I Dream Of You.mp3",
+    "image": "When I Dream Of You.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/When%20I%20Dream%20Of%20You.mp3"
+  },
+  {
+    "title": "Who Shot Cupid_",
+    "artist": "Unknown Artist",
+    "filename": "Who Shot Cupid_.mp3",
+    "image": "Who Shot Cupid_.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Who%20Shot%20Cupid_.mp3"
+  },
+  {
+    "title": "Worship",
+    "artist": "Unknown Artist",
+    "filename": "Worship.mp3",
+    "image": "Worship.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Worship.mp3"
+  },
+  {
+    "title": "YAD",
+    "artist": "Unknown Artist",
+    "filename": "YAD.mp3",
+    "image": "YAD.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/YAD.mp3"
+  },
+  {
+    "title": "You're Lost",
+    "artist": "Unknown Artist",
+    "filename": "You're Lost.mp3",
+    "image": "You're Lost.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/You're%20Lost.mp3"
+  },
+  {
+    "title": "bad vibes forever (feat. PnB Rock & Trippie Redd)",
+    "artist": "Unknown Artist",
+    "filename": "bad vibes forever (feat. PnB Rock & Trippie Redd).mp3",
+    "image": "bad vibes forever (feat. PnB Rock & Trippie Redd).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/bad%20vibes%20forever%20(feat.%20PnB%20Rock%20%26%20Trippie%20Redd).mp3"
+  },
+  {
+    "title": "butterflies",
+    "artist": "Unknown Artist",
+    "filename": "butterflies.mp3",
+    "image": "butterflies.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/butterflies.mp3"
+  },
+  {
+    "title": "chowder",
+    "artist": "Unknown Artist",
+    "filename": "chowder.mp3",
+    "image": "chowder.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/chowder.mp3"
+  },
+  {
+    "title": "don't cry",
+    "artist": "Unknown Artist",
+    "filename": "don't cry.mp3",
+    "image": "don't cry.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/don't%20cry.mp3"
+  },
+  {
+    "title": "issues",
+    "artist": "Unknown Artist",
+    "filename": "issues.mp3",
+    "image": "issues.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/issues.mp3"
+  },
+  {
+    "title": "obsessed",
+    "artist": "Unknown Artist",
+    "filename": "obsessed.mp3",
+    "image": "obsessed.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/obsessed.mp3"
+  },
+  {
+    "title": "off the deep end",
+    "artist": "Unknown Artist",
+    "filename": "off the deep end.mp3",
+    "image": "off the deep end.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/off%20the%20deep%20end.mp3"
+  },
+  {
+    "title": "whoa (mind in awe)",
+    "artist": "Unknown Artist",
+    "filename": "whoa (mind in awe).mp3",
+    "image": "whoa (mind in awe).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/whoa%20(mind%20in%20awe).mp3"
+  },
+  {
+    "title": "you should know better",
+    "artist": "Unknown Artist",
+    "filename": "you should know better.mp3",
+    "image": "you should know better.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/you%20should%20know%20better.mp3"
   }
 ]
