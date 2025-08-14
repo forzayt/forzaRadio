@@ -41,7 +41,6 @@
     "image": "Clouds.png",
     "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Clouds.mp3"
   },
-  
   {
     "title": "Dark Beach",
     "artist": "Unknown Artist",
@@ -748,5 +747,355 @@
     "filename": "因果(Karma Code).mp3",
     "image": "因果(Karma Code).png",
     "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/%E5%9B%A0%E6%9E%9C(Karma%20Code).mp3"
+  },
+  {
+    "title": "BedRock",
+    "artist": "Unknown Artist",
+    "filename": "BedRock.mp3",
+    "image": "BedRock.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/BedRock.mp3"
+  },
+  {
+    "title": "Beez In The Trap",
+    "artist": "Unknown Artist",
+    "filename": "Beez In The Trap.mp3",
+    "image": "Beez In The Trap.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Beez%20In%20The%20Trap.mp3"
+  },
+  {
+    "title": "Bottoms Up (feat. Nicki Minaj)",
+    "artist": "Unknown Artist",
+    "filename": "Bottoms Up (feat. Nicki Minaj).mp3",
+    "image": "Bottoms Up (feat. Nicki Minaj).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Bottoms%20Up%20(feat.%20Nicki%20Minaj).mp3"
+  },
+  {
+    "title": "Check It Out",
+    "artist": "Unknown Artist",
+    "filename": "Check It Out.mp3",
+    "image": "Check It Out.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Check%20It%20Out.mp3"
+  },
+  {
+    "title": "Chun-Li",
+    "artist": "Unknown Artist",
+    "filename": "Chun-Li.mp3",
+    "image": "Chun-Li.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Chun-Li.mp3"
+  },
+  {
+    "title": "Dance (A$$) Remix",
+    "artist": "Unknown Artist",
+    "filename": "Dance (A$$) Remix.mp3",
+    "image": "Dance (A$$) Remix.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Dance%20(A%24%24)%20Remix.mp3"
+  },
+  {
+    "title": "Did It On’em",
+    "artist": "Unknown Artist",
+    "filename": "Did It On’em.mp3",
+    "image": "Did It On’em.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Did%20It%20On%E2%80%99em.mp3"
+  },
+  {
+    "title": "Down In the DM (feat. Nicki Minaj)",
+    "artist": "Remix",
+    "filename": "Down In the DM (feat. Nicki Minaj) - Remix.mp3",
+    "image": "Down In the DM (feat. Nicki Minaj) - Remix.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Down%20In%20the%20DM%20(feat.%20Nicki%20Minaj)%20-%20Remix.mp3"
+  },
+  {
+    "title": "FEFE (feat. Nicki Minaj & Murda Beatz)",
+    "artist": "Unknown Artist",
+    "filename": "FEFE (feat. Nicki Minaj & Murda Beatz).mp3",
+    "image": "FEFE (feat. Nicki Minaj & Murda Beatz).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/FEFE%20(feat.%20Nicki%20Minaj%20%26%20Murda%20Beatz).mp3"
+  },
+  {
+    "title": "Give It All To Me",
+    "artist": "Unknown Artist",
+    "filename": "Give It All To Me.mp3",
+    "image": "Give It All To Me.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Give%20It%20All%20To%20Me.mp3"
+  },
+  {
+    "title": "Good Form (feat. Lil Wayne)",
+    "artist": "Remix",
+    "filename": "Good Form (feat. Lil Wayne) - Remix.mp3",
+    "image": "Good Form (feat. Lil Wayne) - Remix.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Good%20Form%20(feat.%20Lil%20Wayne)%20-%20Remix.mp3"
+  },
+  {
+    "title": "High School",
+    "artist": "Unknown Artist",
+    "filename": "High School.mp3",
+    "image": "High School.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/High%20School.mp3"
+  },
+  {
+    "title": "Hot Girl Summer (feat. Nicki Minaj & Ty Dolla $ign)",
+    "artist": "Unknown Artist",
+    "filename": "Hot Girl Summer (feat. Nicki Minaj & Ty Dolla $ign).mp3",
+    "image": "Hot Girl Summer (feat. Nicki Minaj & Ty Dolla $ign).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Hot%20Girl%20Summer%20(feat.%20Nicki%20Minaj%20%26%20Ty%20Dolla%20%24ign).mp3"
+  },
+  {
+    "title": "How To Love",
+    "artist": "Unknown Artist",
+    "filename": "How To Love.mp3",
+    "image": "How To Love.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/How%20To%20Love.mp3"
+  },
+  {
+    "title": "Itty Bitty Piggy",
+    "artist": "Unknown Artist",
+    "filename": "Itty Bitty Piggy.mp3",
+    "image": "Itty Bitty Piggy.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Itty%20Bitty%20Piggy.mp3"
+  },
+  {
+    "title": "Let Me Love You",
+    "artist": "Unknown Artist",
+    "filename": "Let Me Love You.mp3",
+    "image": "Let Me Love You.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Let%20Me%20Love%20You.mp3"
+  },
+  {
+    "title": "Letting Go (Dutty Love) featuring Nicki Minaj (feat. Nicki Minaj)",
+    "artist": "Unknown Artist",
+    "filename": "Letting Go (Dutty Love) featuring Nicki Minaj (feat. Nicki Minaj).mp3",
+    "image": "Letting Go (Dutty Love) featuring Nicki Minaj (feat. Nicki Minaj).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Letting%20Go%20(Dutty%20Love)%20featuring%20Nicki%20Minaj%20(feat.%20Nicki%20Minaj).mp3"
+  },
+  {
+    "title": "Lollipop",
+    "artist": "Unknown Artist",
+    "filename": "Lollipop.mp3",
+    "image": "Lollipop.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Lollipop.mp3"
+  },
+  {
+    "title": "Long Way 2 Go",
+    "artist": "Unknown Artist",
+    "filename": "Long Way 2 Go.mp3",
+    "image": "Long Way 2 Go.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Long%20Way%202%20Go.mp3"
+  },
+  {
+    "title": "Lookin Ass",
+    "artist": "Unknown Artist",
+    "filename": "Lookin Ass.mp3",
+    "image": "Lookin Ass.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Lookin%20Ass.mp3"
+  },
+  {
+    "title": "Make Love",
+    "artist": "Unknown Artist",
+    "filename": "Make Love.mp3",
+    "image": "Make Love.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Make%20Love.mp3"
+  },
+  {
+    "title": "Make Me Proud",
+    "artist": "Unknown Artist",
+    "filename": "Make Me Proud.mp3",
+    "image": "Make Me Proud.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Make%20Me%20Proud.mp3"
+  },
+  {
+    "title": "Me & U",
+    "artist": "Unknown Artist",
+    "filename": "Me & U.mp3",
+    "image": "Me & U.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Me%20%26%20U.mp3"
+  },
+  {
+    "title": "Moment 4 Life",
+    "artist": "Unknown Artist",
+    "filename": "Moment 4 Life.mp3",
+    "image": "Moment 4 Life.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Moment%204%20Life.mp3"
+  },
+  {
+    "title": "Motivation",
+    "artist": "Unknown Artist",
+    "filename": "Motivation.mp3",
+    "image": "Motivation.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Motivation.mp3"
+  },
+  {
+    "title": "My Type",
+    "artist": "Unknown Artist",
+    "filename": "My Type.mp3",
+    "image": "My Type.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/My%20Type.mp3"
+  },
+  {
+    "title": "No Flex Zone",
+    "artist": "Remix",
+    "filename": "No Flex Zone - Remix.mp3",
+    "image": "No Flex Zone - Remix.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/No%20Flex%20Zone%20-%20Remix.mp3"
+  },
+  {
+    "title": "No Love",
+    "artist": "Unknown Artist",
+    "filename": "No Love.mp3",
+    "image": "No Love.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/No%20Love.mp3"
+  },
+  {
+    "title": "Official Girl (feat. Lil' Wayne)",
+    "artist": "Unknown Artist",
+    "filename": "Official Girl (feat. Lil' Wayne).mp3",
+    "image": "Official Girl (feat. Lil' Wayne).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Official%20Girl%20(feat.%20Lil'%20Wayne).mp3"
+  },
+  {
+    "title": "Plain Jane REMIX (feat. Nicki Minaj)",
+    "artist": "Unknown Artist",
+    "filename": "Plain Jane REMIX (feat. Nicki Minaj).mp3",
+    "image": "Plain Jane REMIX (feat. Nicki Minaj).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Plain%20Jane%20REMIX%20(feat.%20Nicki%20Minaj).mp3"
+  },
+  {
+    "title": "Pound Town 2",
+    "artist": "Unknown Artist",
+    "filename": "Pound Town 2.mp3",
+    "image": "Pound Town 2.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Pound%20Town%202.mp3"
+  },
+  {
+    "title": "Princess Diana (with Nicki Minaj)",
+    "artist": "Unknown Artist",
+    "filename": "Princess Diana (with Nicki Minaj).mp3",
+    "image": "Princess Diana (with Nicki Minaj).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Princess%20Diana%20(with%20Nicki%20Minaj).mp3"
+  },
+  {
+    "title": "Rake It Up (feat. Nicki Minaj)",
+    "artist": "Unknown Artist",
+    "filename": "Rake It Up (feat. Nicki Minaj).mp3",
+    "image": "Rake It Up (feat. Nicki Minaj).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Rake%20It%20Up%20(feat.%20Nicki%20Minaj).mp3"
+  },
+  {
+    "title": "Red Ruby Da Sleeze",
+    "artist": "Unknown Artist",
+    "filename": "Red Ruby Da Sleeze.mp3",
+    "image": "Red Ruby Da Sleeze.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Red%20Ruby%20Da%20Sleeze.mp3"
+  },
+  {
+    "title": "Run Up",
+    "artist": "Unknown Artist",
+    "filename": "Run Up.mp3",
+    "image": "Run Up.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Run%20Up.mp3"
+  },
+  {
+    "title": "Senile",
+    "artist": "Unknown Artist",
+    "filename": "Senile.mp3",
+    "image": "Senile.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Senile.mp3"
+  },
+  {
+    "title": "Side To Side",
+    "artist": "Unknown Artist",
+    "filename": "Side To Side.mp3",
+    "image": "Side To Side.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Side%20To%20Side.mp3"
+  },
+  {
+    "title": "Somebody Else (feat. Nicki Minaj)",
+    "artist": "Unknown Artist",
+    "filename": "Somebody Else (feat. Nicki Minaj).mp3",
+    "image": "Somebody Else (feat. Nicki Minaj).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Somebody%20Else%20(feat.%20Nicki%20Minaj).mp3"
+  },
+  {
+    "title": "Super Bass",
+    "artist": "Unknown Artist",
+    "filename": "Super Bass.mp3",
+    "image": "Super Bass.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Super%20Bass.mp3"
+  },
+  {
+    "title": "The Motto",
+    "artist": "Unknown Artist",
+    "filename": "The Motto.mp3",
+    "image": "The Motto.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/The%20Motto.mp3"
+  },
+  {
+    "title": "The Way Life Goes (feat. Nicki Minaj & Oh Wonder)",
+    "artist": "Remix",
+    "filename": "The Way Life Goes (feat. Nicki Minaj & Oh Wonder) - Remix.mp3",
+    "image": "The Way Life Goes (feat. Nicki Minaj & Oh Wonder) - Remix.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/The%20Way%20Life%20Goes%20(feat.%20Nicki%20Minaj%20%26%20Oh%20Wonder)%20-%20Remix.mp3"
+  },
+  {
+    "title": "Touchin, Lovin (feat. Nicki Minaj)",
+    "artist": "Unknown Artist",
+    "filename": "Touchin, Lovin (feat. Nicki Minaj).mp3",
+    "image": "Touchin, Lovin (feat. Nicki Minaj).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Touchin%2C%20Lovin%20(feat.%20Nicki%20Minaj).mp3"
+  },
+  {
+    "title": "Up All Night",
+    "artist": "Unknown Artist",
+    "filename": "Up All Night.mp3",
+    "image": "Up All Night.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Up%20All%20Night.mp3"
+  },
+  {
+    "title": "WHOLE LOTTA MONEY (feat. Nicki Minaj)",
+    "artist": "Remix",
+    "filename": "WHOLE LOTTA MONEY (feat. Nicki Minaj) - Remix.mp3",
+    "image": "WHOLE LOTTA MONEY (feat. Nicki Minaj) - Remix.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/WHOLE%20LOTTA%20MONEY%20(feat.%20Nicki%20Minaj)%20-%20Remix.mp3"
+  },
+  {
+    "title": "Welcome To The Party (feat. Nicki Minaj)",
+    "artist": "Remix",
+    "filename": "Welcome To The Party (feat. Nicki Minaj) - Remix.mp3",
+    "image": "Welcome To The Party (feat. Nicki Minaj) - Remix.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Welcome%20To%20The%20Party%20(feat.%20Nicki%20Minaj)%20-%20Remix.mp3"
+  },
+  {
+    "title": "What That Speed Bout!_",
+    "artist": "Unknown Artist",
+    "filename": "What That Speed Bout!_.mp3",
+    "image": "What That Speed Bout!_.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/What%20That%20Speed%20Bout!_.mp3"
+  },
+  {
+    "title": "Wild Side (feat. Cardi B)",
+    "artist": "Unknown Artist",
+    "filename": "Wild Side (feat. Cardi B).mp3",
+    "image": "Wild Side (feat. Cardi B).png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Wild%20Side%20(feat.%20Cardi%20B).mp3"
+  },
+  {
+    "title": "Y.U. MAD",
+    "artist": "Unknown Artist",
+    "filename": "Y.U. MAD.mp3",
+    "image": "Y.U. MAD.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Y.U.%20MAD.mp3"
+  },
+  {
+    "title": "You",
+    "artist": "Unknown Artist",
+    "filename": "You.mp3",
+    "image": "You.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/You.mp3"
+  },
+  {
+    "title": "Your Love",
+    "artist": "Unknown Artist",
+    "filename": "Your Love.mp3",
+    "image": "Your Love.png",
+    "audioUrl": "https://ia902909.us.archive.org/5/items/kerosene-crystal-castles_202508/Your%20Love.mp3"
   }
 ]
