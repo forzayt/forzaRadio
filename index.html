@@ -281,12 +281,7 @@ async function searchSpotifyAlbumArt(songTitle, artistName) {
 }
 
 function getFallbackAlbumArt() {
-    const patterns = [
-        'https://via.placeholder.com/400x400/1DB954/191414?text=ForzaRadio',
-        'https://via.placeholder.com/400x400/1ed760/000000?text=Music+Player',
-        'https://via.placeholder.com/400x400/1fdf64/191414?text=IA+Music'
-    ];
-    return patterns[Math.floor(Math.random() * patterns.length)];
+    return 'https://avatars.githubusercontent.com/u/127679210?v=4';
 }
 
 async function updateSongInfo(songData) {
