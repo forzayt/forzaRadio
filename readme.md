@@ -1,280 +1,146 @@
-# 🎵 ForzaRadio - Internet Archive Non-Stop Radio
+# ForzaRadio - IA Music Player
 
-> **Transform your music player into a continuous radio stream from your Internet Archive collection**
+A beautiful, modern music player that streams your music collection from Internet Archive with AI-powered album art.
 
-## 🚀 Overview
+## 🎵 Features
 
-ForzaRadio is an enhanced version of the original music player that automatically streams music from your Internet Archive uploads. It creates a non-stop radio experience that continuously plays your uploaded music collection.
+- **Beautiful UI**: Modern, responsive design with gradient animations
+- **AI Album Art**: Automatic Spotify integration for album covers
+- **Continuous Play**: Non-stop radio experience
+- **Fullscreen Mode**: Immersive listening experience
+- **Progress Bar**: Visual playback progress with click-to-seek
+- **Simple Setup**: Just upload songs and generate playlist
 
-## ✨ Key Features
+## 🚀 Quick Start
 
-### 🎧 **Radio Mode**
-- **Auto-play**: Continuous streaming without interruption
-- **IA Integration**: Direct connection to your Internet Archive collection
-- **Smart Fallback**: Falls back to original playlist if IA is unavailable
-- **Real-time Updates**: Refresh playlist to get latest uploads
+### 1. **Prepare Your Music**
+- Place your MP3 files in a folder (e.g., `C:\Users\vishn\Music`)
+- Use the format: `Title - Artist.mp3`
 
-### 🎛️ **Enhanced Controls**
-- **Shuffle Mode**: Random song selection for variety
-- **Sequential Mode**: Play songs in order
-- **Refresh Button**: Update playlist from IA
-- **Progress Tracking**: Visual progress with click-to-seek
+### 2. **Generate Playlist**
+```bash
+# Run the batch script to generate songs.json
+generate-songs.bat
+```
 
-### 📱 **User Experience**
-- **Radio Indicators**: Clear visual feedback for radio mode
-- **Status Display**: Connection and song count information
-- **Responsive Design**: Works on all devices
-- **Embeddable**: Can be embedded in any website
+### 3. **Upload to Internet Archive**
+- Go to [archive.org](https://archive.org)
+- Upload your MP3 files manually
+- Copy the direct download URLs
 
-## 🛠️ Technical Architecture
+### 4. **Update songs.json**
+- Open `songs.json`
+- Add `audioUrl` field with the IA download URL for each song:
 
-### **File Structure**
+```json
+[
+  {
+    "title": "Kerosene",
+    "artist": "Crystal Castles", 
+    "filename": "Kerosene - Crystal Castles.mp3",
+    "image": "Kerosene - Crystal Castles.png",
+    "audioUrl": "https://ia802909.us.archive.org/5/items/your-collection/Kerosene%20-%20Crystal%20Castles.mp3"
+  }
+]
+```
+
+### 5. **Launch Player**
+- Open `index.html` in your browser
+- Enjoy your music!
+
+## 📁 File Structure
+
 ```
 forzaRadio/
-├── index.html              # Main application (hybrid mode)
-├── embed/
-│   ├── index.html          # Original embed version
-│   └── radio.html          # Radio-only version
-├── js/
-│   ├── music-list.js       # Original song data
-│   ├── ia-radio.js         # IA integration logic
-│   └── forza-radio.js      # Main radio controller
-├── style.css               # Styling
-├── test-ia.html           # IA integration test
-└── upload.bat.txt          # IA upload script
+├── index.html              # Main player interface
+├── songs.json              # Generated playlist (auto-created)
+├── generate-songs.bat      # Script to generate playlist
+├── upload.bat              # Legacy upload script (optional)
+└── readme.md               # This file
 ```
 
-### **Core Components**
+## 🔄 Workflow
 
-#### 1. **IARadio Class** (`js/ia-radio.js`)
-- Handles Internet Archive API communication
-- Manages playlist loading and caching
-- Controls shuffle and sequential modes
-- Auto-play functionality
+### **Adding New Songs**
+1. **Add MP3 files** to your music folder
+2. **Run `generate-songs.bat`** to update the playlist
+3. **Upload to Internet Archive** manually
+4. **Update `audioUrl`** in songs.json with IA download links
+5. **Refresh the player** to see new songs
 
-#### 2. **ForzaRadio Class** (`js/forza-radio.js`)
-- Main application controller
-- Integrates IA radio with original player
-- Manages UI updates and event handling
-- Provides fallback to original music
-
-#### 3. **Radio Interface** (`embed/radio.html`)
-- Dedicated radio streaming interface
-- Auto-start functionality
-- Radio-specific styling and indicators
-
-## 🔧 Setup Instructions
-
-### **1. Internet Archive Integration**
-
-Your upload system is already configured:
-- **Upload Script**: `upload.bat.txt` handles MP3 uploads to IA
-- **Email**: `vishnusanthoshvr@gmail.com` (configured in IA radio)
-- **File Naming**: `music_YYYYMMDD_HHMMSS_filename` format
-- **Metadata**: Title and artist extracted via ffprobe
-
-### **2. Usage Options**
-
-#### **Option A: Hybrid Mode** (Recommended)
-```html
-<!-- Use main index.html - automatically detects IA availability -->
-<!-- Falls back to original music if IA is unavailable -->
-```
-
-#### **Option B: Radio-Only Mode**
-```html
-<!-- Use embed/radio.html for dedicated radio experience -->
-<!-- Auto-starts and focuses on IA streaming -->
-```
-
-#### **Option C: Embed in Other Sites**
-```html
-<!-- Embed the radio player -->
-<iframe src="https://your-domain.com/embed/radio.html"
-        title="ForzaRadio"
-        width="100%"
-        height="400"
-        frameborder="0">
-</iframe>
-```
-
-### **3. Configuration**
-
-#### **IA Radio Settings** (`js/ia-radio.js`)
-```javascript
-class IARadio {
-    constructor() {
-        this.uploaderEmail = "vishnusanthoshvr@gmail.com"; // Your IA email
-        this.autoPlayNext = true;                          // Auto-play enabled
-        this.shuffleMode = false;                          // Default: sequential
-    }
-}
-```
-
-#### **Customization Options**
-- **Email**: Change `uploaderEmail` to your IA account
-- **Auto-play**: Set `autoPlayNext` to false to disable
-- **Shuffle**: Set `shuffleMode` to true for default shuffle
-- **API Limits**: Adjust `rows=200` in search URL for more songs
-
-## 🎮 How It Works
-
-### **1. Initialization Process**
-1. **Load IA Playlist**: Fetches your uploaded music from IA
-2. **Format Data**: Converts IA metadata to player format
-3. **Setup Auto-play**: Configures continuous streaming
-4. **Fallback Check**: Uses original music if IA fails
-
-### **2. Radio Streaming**
-1. **Song Selection**: Gets next song from playlist
-2. **Audio Loading**: Streams from IA download URLs
-3. **Auto-advance**: Automatically plays next song when current ends
-4. **UI Updates**: Updates player interface with current song info
-
-### **3. User Controls**
-- **Play/Pause**: Standard audio controls
-- **Next/Previous**: Manual song navigation
-- **Shuffle**: Toggle between random and sequential
-- **Refresh**: Update playlist from IA
-- **Progress Bar**: Click to seek within songs
-
-## 🔄 Upload Workflow
-
-### **1. Prepare Music Files**
-```
-C:\Users\vishn\Music\Upload\
-├── song1.mp3
-├── song2.mp3
-└── song3.mp3
-```
-
-### **2. Run Upload Script**
-```batch
-# Execute upload.bat.txt
-# Automatically uploads all MP3s to IA
-# Extracts metadata using ffprobe
-# Creates unique identifiers
-```
-
-### **3. Radio Integration**
-- **Automatic Detection**: ForzaRadio finds new uploads
-- **Real-time Updates**: Refresh button gets latest songs
-- **Seamless Playback**: No manual configuration needed
+### **Batch Script Features**
+- **Automatic Detection**: Scans folder for new MP3 files
+- **Metadata Parsing**: Extracts title/artist from filenames
+- **JSON Generation**: Creates player-ready playlist file
+- **Error Handling**: Graceful fallbacks for missing metadata
 
 ## 🎨 Customization
 
-### **Styling**
-```css
-/* Radio indicator colors */
-.radio-indicator {
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-}
-
-/* Auto-play indicator */
-.auto-play-indicator {
-    background: #4CAF50;
-}
+### **Change Music Folder**
+Edit `generate-songs.bat`:
+```batch
+set "MUSIC_FOLDER=C:\Your\Music\Path"
 ```
 
-### **Behavior**
+### **Modify Player Settings**
+Edit `index.html`:
 ```javascript
-// Disable auto-play
-window.iaRadio.autoPlayNext = false;
-
-// Enable shuffle by default
-window.iaRadio.shuffleMode = true;
-
-// Custom refresh interval
-setInterval(() => {
-    window.iaRadio.refreshPlaylist();
-}, 300000); // Refresh every 5 minutes
+const SONG_COLLECTION = {
+    jsonFile: "songs.json" // Change to your JSON file
+};
 ```
 
-## 🚀 Deployment
+## 🛠️ Technical Details
 
-### **GitHub Pages**
-1. Push code to GitHub repository
-2. Enable GitHub Pages in repository settings
-3. Access via `https://username.github.io/repository-name`
+### **Supported Formats**
+- MP3 files (primary)
+- WAV files (experimental)
+- FLAC files (experimental)
 
-### **Custom Domain**
-1. Upload files to web server
-2. Configure domain DNS
-3. Access via your custom domain
+### **File Naming Convention**
+- **Required**: `Title - Artist.mp3`
+- **Example**: `Kerosene - Crystal Castles.mp3`
 
-### **Local Testing**
-1. Use local web server (Python, Node.js, etc.)
-2. Test IA integration with your uploads
-3. Verify auto-play functionality
-
-## 🔍 Troubleshooting
-
-### **Common Issues**
-
-#### **IA Connection Failed**
-- Check internet connection
-- Verify IA API availability
-- Confirm email address in configuration
-- Check browser console for errors
-
-#### **No Songs Found**
-- Ensure songs are uploaded to IA
-- Verify uploader email matches configuration
-- Check IA search API response
-- Use browser dev tools to debug
-
-#### **Auto-play Not Working**
-- Modern browsers block auto-play
-- User must interact with page first
-- Check browser autoplay policies
-- Consider manual play button
-
-### **Debug Mode**
-```javascript
-// Enable debug logging
-console.log("IA Radio Status:", window.iaRadio.getStatus());
-console.log("Current Song:", window.iaRadio.getCurrentSong());
-console.log("Playlist:", window.iaRadio.getAllSongs());
+### **JSON Structure**
+```json
+{
+  "title": "Song Title",
+  "artist": "Artist Name", 
+  "filename": "filename.mp3",
+  "image": "filename.png",
+  "audioUrl": "https://ia.org/download/url.mp3"
+}
 ```
 
-## 📈 Future Enhancements
+## 🎯 Benefits of This Approach
 
-### **Planned Features**
-- **Volume Control**: Add volume slider
-- **Playlist Management**: Create custom playlists
-- **Audio Visualizations**: Add visual effects
-- **Offline Mode**: Cache songs for offline playback
-- **Social Features**: Share current song
-- **Analytics**: Track listening statistics
+✅ **Simple**: No complex IA API integration  
+✅ **Reliable**: Direct file-based playlist management  
+✅ **Flexible**: Easy to add/remove songs  
+✅ **Fast**: No dynamic fetching delays  
+✅ **Offline**: Works without internet (local files)  
 
-### **API Improvements**
-- **Caching**: Local storage for better performance
-- **Pagination**: Handle large music collections
-- **Search**: Filter songs by title/artist
-- **Categories**: Organize music by genre/mood
+## 🚨 Troubleshooting
 
-## 🤝 Contributing
+### **No Songs Appearing**
+- Check if `songs.json` exists
+- Verify file paths in batch script
+- Ensure MP3 files are in correct folder
 
-### **Development Setup**
-1. Fork the repository
-2. Create feature branch
-3. Make changes and test
-4. Submit pull request
+### **Audio Not Playing**
+- Verify `audioUrl` in songs.json
+- Check IA download links are accessible
+- Test URLs in browser directly
 
-### **Testing**
-- Test with different IA collections
-- Verify fallback functionality
-- Check mobile responsiveness
-- Validate embed functionality
+### **Batch Script Errors**
+- Ensure music folder path is correct
+- Check file permissions
+- Verify MP3 files exist
 
-## 📄 License
+## 📝 License
 
-This project is based on the original MusicApp by Samir Paul and enhanced with ForzaRadio functionality.
-
-## 🎵 Enjoy Your Radio!
-
-ForzaRadio transforms your music collection into a continuous streaming experience. Upload your music to Internet Archive, and let ForzaRadio create your personal radio station!
+This project is open source. Feel free to modify and distribute.
 
 ---
 
-**🎧 Start streaming your IA music collection today!**
+**ForzaRadio** - Your personal AI-powered music streaming experience! 🎵
