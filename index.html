@@ -283,8 +283,30 @@ function playNext() {
 
     const song = items[currentIndex];
     updateSongInfo({ title: song.title, artist: song.artist });
+    
+    // Set the audio source
     player.src = song.audioUrl || song.filename;
-    if (!isPlaying) togglePlayPause();
+    
+    // Add error handling for audio loading
+    player.onerror = () => {
+        console.error('Failed to load audio:', song.title);
+        // Try to play next song if current one fails
+        currentIndex++;
+        setTimeout(playNext, 1000);
+    };
+    
+    // Ensure audio plays when loaded
+    player.oncanplay = () => {
+        if (isPlaying) {
+            player.play().catch(error => {
+                console.error('Autoplay failed:', error);
+                // If autoplay fails, we'll need user interaction to resume
+                isPlaying = false;
+                playBtn.classList.replace('fa-pause', 'fa-play');
+            });
+        }
+    };
+    
     currentIndex++;
 }
 
@@ -311,8 +333,22 @@ async function initPlayer() {
     }
     shuffleArray(items);
     currentIndex = 0;
-    isPlaying = true;
-    playNext();
+    
+    // Load first song but don't auto-play due to browser policies
+    const song = items[currentIndex];
+    updateSongInfo({ title: song.title, artist: song.artist });
+    player.src = song.audioUrl || song.filename;
+    currentIndex++;
+    
+    // Set up audio event handlers
+    player.oncanplay = () => {
+        console.log('Audio ready to play');
+    };
+    
+    player.onerror = () => {
+        console.error('Failed to load initial audio:', song.title);
+        playNext();
+    };
 }
 
 playBtn.addEventListener('click', togglePlayPause);
@@ -320,7 +356,18 @@ nextBtn.addEventListener('click', playNext);
 prevBtn.addEventListener('click', playPrev);
 fullscreenBtn.addEventListener('click', toggleFullscreen);
 player.addEventListener('timeupdate', updateProgress);
-player.addEventListener('ended', playNext);
+player.addEventListener('ended', () => {
+    console.log('Song ended, playing next...');
+    playNext();
+});
+
+// Fallback: Check if song has ended but event didn't fire
+setInterval(() => {
+    if (isPlaying && player.duration && player.currentTime >= player.duration - 0.1) {
+        console.log('Fallback: Song appears to have ended');
+        playNext();
+    }
+}, 1000);
 playerProgress.addEventListener('click', e => {
     player.currentTime = (e.offsetX / playerProgress.clientWidth) * player.duration;
 });
