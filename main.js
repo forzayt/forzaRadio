@@ -26,6 +26,7 @@ new Vue({
         nextBufferedForIndex: -1,
         bufferPlayer: null,
         PRELOAD_AFTER_SECONDS: 7,
+        preloadedImages: new Map(), // Store preloaded images
         SPOTIFY_CONFIG: {
             clientId: '57e7d63ff50e46058facee08174119c7',
             clientSecret: 'c8f8624cc0c245db82a065d2f8182f7c'
@@ -101,23 +102,61 @@ new Vue({
         return 'https://avatars.githubusercontent.com/u/127679210?v=4';
       },
 
+      // Preload album art image
+      async preloadAlbumArt(songData) {
+        try {
+          const imageUrl = await this.searchSpotifyAlbumArt(songData.title, songData.artist);
+          const key = `${songData.title}-${songData.artist}`;
+          
+          if (!this.preloadedImages.has(key)) {
+            const img = new Image();
+            img.onload = () => {
+              this.preloadedImages.set(key, imageUrl);
+              console.log(`Preloaded album art for: ${songData.title}`);
+            };
+            img.onerror = () => {
+              console.warn(`Failed to preload album art for: ${songData.title}`);
+            };
+            img.src = imageUrl;
+          }
+        } catch (error) {
+          console.warn('Error preloading album art:', error);
+        }
+      },
+
+      // Get preloaded album art or fetch it
+      async getAlbumArt(songData) {
+        const key = `${songData.title}-${songData.artist}`;
+        
+        // Check if image is already preloaded
+        if (this.preloadedImages.has(key)) {
+          return this.preloadedImages.get(key);
+        }
+        
+        // If not preloaded, fetch and cache it
+        const imageUrl = await this.searchSpotifyAlbumArt(songData.title, songData.artist);
+        this.preloadedImages.set(key, imageUrl);
+        return imageUrl;
+      },
+
       async updateSongInfo(songData) {
         this.currentSongData = songData;
+        
+        // Use preloaded image if available, otherwise fetch it
+        const coverUrl = await this.getAlbumArt(songData);
+        
         this.currentTrack = {
           name: songData.title || "Unknown Title",
           artist: songData.artist || "Unknown Artist",
-          cover: await this.searchSpotifyAlbumArt(songData.title, songData.artist),
+          cover: coverUrl,
           source: songData.audioUrl || songData.filename,
           url: "#",
           favorited: false
         };
         this.currentAlbumArt = this.currentTrack.cover;
         
-        // Update background image
-        const bgImg = document.getElementById('bg-img');
-        if (bgImg) {
-          bgImg.src = this.currentAlbumArt;
-        }
+        // Smoothly transition background image
+        await this.transitionBackgroundImage(this.currentAlbumArt);
       },
 
       shuffleArray(array) {
@@ -146,6 +185,9 @@ new Vue({
         this.bufferPlayer.load?.();
         this.nextPreloadStarted = true;
         this.nextBufferedForIndex = nextIndex;
+
+        // Also preload the album art for the next track
+        this.preloadAlbumArt(nextSong);
       },
 
       playNext() {
@@ -271,7 +313,29 @@ new Vue({
         this.nextBufferedForIndex = -1;
 
         this.currentIndex++;
-      }
+      },
+
+
+
+      // Smoothly transition background image
+      async transitionBackgroundImage(newImageUrl) {
+        const bgImg = document.getElementById('bg-img');
+        if (bgImg) {
+          // Create a temporary image to preload
+          const tempImg = new Image();
+          tempImg.onload = () => {
+            // Once loaded, smoothly transition the background
+            bgImg.style.transition = 'opacity 0.5s ease-in-out';
+            bgImg.style.opacity = '0';
+            
+            setTimeout(() => {
+              bgImg.src = newImageUrl;
+              bgImg.style.opacity = '1';
+            }, 250);
+          };
+          tempImg.src = newImageUrl;
+        }
+      },
     },
     async created() {
       let vm = this;
