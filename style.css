@@ -59,12 +59,18 @@ body {
 }
 
 .player {
-  background: #eef3f7;
+  background: rgba(238, 243, 247, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   width: 410px;
   min-height: 480px;
-  box-shadow: 0px 15px 35px -5px rgba(50, 88, 130, 0.32);
+  box-shadow: 
+    0px 15px 35px -5px rgba(50, 88, 130, 0.32),
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   border-radius: 15px;
   padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 @media screen and (max-width: 576px), (max-height: 500px) {
   .player {
@@ -173,7 +179,7 @@ body {
   font-size: 30px;
   padding: 5px;
   margin-bottom: 10px;
-  color: #acb8cc;
+  color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   width: 50px;
   height: 50px;
@@ -187,7 +193,7 @@ body {
     font-size: 26px;
     padding: 5px;
     margin-right: 10px;
-    color: #acb8cc;
+    color: rgba(255, 255, 255, 0.9);
     cursor: pointer;
     width: 40px;
     height: 40px;
@@ -209,7 +215,7 @@ body {
 }
 @media screen and (min-width: 500px) {
   .player-controls__item:hover {
-    color: #532ab9;
+    color: #ffffff;
   }
   .player-controls__item:hover::before {
     opacity: 1;
@@ -218,7 +224,7 @@ body {
 }
 @media screen and (max-width: 576px), (max-height: 500px) {
   .player-controls__item:active {
-    color: #532ab9;
+    color: #ffffff;
   }
   .player-controls__item:active::before {
     opacity: 1;
@@ -249,7 +255,7 @@ body {
   display: none;
 }
 .player-controls__item.-favorite.active {
-  color: red;
+  color: #ff6b6b;
 }
 
 [v-cloak] {
@@ -271,17 +277,17 @@ body {
   justify-content: space-between;
 }
 .progress__duration {
-  color: #71829e;
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 700;
   font-size: 20px;
-  opacity: 0.5;
+  opacity: 0.8;
 }
 .progress__time {
   margin-top: 2px;
-  color: #71829e;
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 700;
   font-size: 16px;
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .progress__bar {
@@ -309,7 +315,7 @@ body {
 }
 
 .album-info {
-  color: #71829e;
+  color: rgba(255, 255, 255, 0.9);
   flex: 1;
   padding-right: 60px;
   user-select: none;
