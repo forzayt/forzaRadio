@@ -147,10 +147,8 @@ new Vue({
         
         this.currentTrack = {
           name: songData.title || "Unknown Title",
-          artist: songData.artist || "Unknown Artist",
           cover: coverUrl,
           source: songData.audioUrl || songData.filename,
-          url: "#",
           favorited: false
         };
         this.currentAlbumArt = this.currentTrack.cover;
@@ -294,10 +292,8 @@ new Vue({
         if (this.items.length === 0) {
           this.currentTrack = {
             name: "No songs available",
-            artist: "",
             cover: this.getFallbackAlbumArt(),
             source: "",
-            url: "#",
             favorited: false
           };
           return;

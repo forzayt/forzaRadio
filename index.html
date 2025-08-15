@@ -48,7 +48,7 @@
                             <use xlink:href="#icon-heart-o"></use>
                         </svg>
                     </div>
-                    <a :href="currentTrack.url" target="_blank" class="player-controls__item">
+                    <a :href="`https://songdata.io/search?query=${encodeURIComponent(currentTrack.name)}`" target="_blank" class="player-controls__item" title="Search on Google">
                         <svg class="icon">
                             <use xlink:href="#icon-link"></use>
                         </svg>
