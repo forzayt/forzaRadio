@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ForzaRadio - IA Music Player</title>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <link rel="icon" id="icon" href="https://forzayt.github.io/assets/emoji.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+
+        html { box-sizing: border-box; }
+        body {
+            cursor: crosshair;
+            margin: 0;
+            font-family: 'Ubuntu', sans-serif;
+            font-size: 12px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .background {
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            z-index: -1;
+        }
+        .background img {
+            position: absolute;
+            margin: auto;
+            top: 0; left: 0; bottom: 0; right: 0;
+            min-width: 50%;
+            min-height: 50%;
+            filter: blur(15px);
+            -webkit-filter: blur(50px);
+            transform: scale(1.1);
+        }
+        .container {
+            background-color: #e7e7e7;
+            height: 500px;
+            width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+        }
+        .container:hover { box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6); }
+        .player-img { width: 300px; height: 300px; position: relative; top: -50px; left: 50px; }
+        .player-img img {
+            object-fit: cover;
+            border-radius: 20px;
+            height: 0; width: 0;
+            opacity: 0;
+            box-shadow: 0 5px 30px 5px rgba(0, 0, 0, 0.5);
+        }
+        .player-img:hover img { box-shadow: 0 5px 30px 5px rgba(0, 0, 0, 0.8); }
+        .player-img img.active { width: 100%; height: 100%; transition: all 0.5s; opacity: 1; }
+        h2 { font-size: 25px; text-align: center; font-weight: 500; margin: 10px 0 0; }
+        h3 { font-size: 18px; text-align: center; font-weight: 500; margin: 10px 0 0; }
+        .player-progress {
+            background-color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 40px 20px 35px;
+            height: 6px;
+            width: 90%;
+        }
+        .progress {
+            border-radius: 5px;
+            height: 100%;
+            width: 0%;
+            transition: width 0.1s linear;
+            background: linear-gradient(90deg, #ff7eb3, #ff758c, #f9d423, #ff4e50, #43cea2, #185a9d);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .music-duration {
+            position: relative;
+            top: -25px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .player-controls {
+            position: relative;
+            top: -15px;
+            left: 120px;
+            width: 200px;
+        }
+        .fa-solid {
+            font-size: 30px;
+            color: #666;
+            margin-right: 30px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+        .fa-solid:hover { filter: brightness(40%); }
+        .play-button { font-size: 44px; position: relative; top: 3px; }
+        .fullscreen-btn {
+            position: fixed;
+            top: 10px;
+            right: -20px;
+            border: none;
+            background: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            padding: 8px;
+        }
+        .fullscreen-btn:hover { transform: scale(1.1); color: #1ed760; }
+        .fullscreen-btn:active { transform: scale(0.95); }
+        
+        /* Live count styling */
+        .live-count {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+           
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background-color: #43b581;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .listeners-text {
+            font-family: 'Ubuntu', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="fullscreen-toggle" class="fullscreen-btn" title="Toggle Fullscreen">
+        <i class="fa-solid fa-expand"></i>
+    </button>
+
+    <div class="live-count">
+        <div class="live-indicator"></div>
+        <span id="livecount">0</span>
+        <span class="listeners-text"></span>
+    </div>
+
+    <div class="background">
+        <img src="" id="bg-img">
+    </div>
+
+    <div class="container">
+        <div class="player-img">
+            <img src="" class="active" id="cover">
+        </div>
+        <h2 id="music-title">ForzaRadio - IA Collection</h2>
+        <div class="player-progress" id="player-progress">
+            <div class="progress" id="progress"></div>
+            <div class="music-duration">
+                <span id="current-time">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+        <div class="player-controls">
+            <i class="fa-solid fa-backward" title="Previous" id="prev"></i>
+            <i class="fa-solid fa-play play-button" title="Play" id="play"></i>
+            <i class="fa-solid fa-forward" title="Next" id="next"></i>
+        </div>
+    </div>
+
+    <audio id="radio-player" preload="metadata"></audio>
+
+<script>
+const SONG_COLLECTION = { jsonFile: "songs.json" };
+
+async function loadSongList() {
+    try {
+        const response = await fetch(SONG_COLLECTION.jsonFile);
+        if (response.ok) return await response.json();
+        throw new Error('Failed to load songs.json');
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
+
+const coverImg = document.getElementById('cover'),
+    titleEl = document.getElementById('music-title'),
+    currentTimeEl = document.getElementById('current-time'),
+    durationEl = document.getElementById('duration'),
+    progress = document.getElementById('progress'),
+    playerProgress = document.getElementById('player-progress'),
+    prevBtn = document.getElementById('prev'),
+    nextBtn = document.getElementById('next'),
+    playBtn = document.getElementById('play'),
+    bgImg = document.getElementById('bg-img'),
+    player = document.getElementById('radio-player'),
+    fullscreenBtn = document.getElementById('fullscreen-toggle');
+
+let items = [];
+let currentIndex = 0;
+let isPlaying = false;
+let currentSongData = null;
+let currentAlbumArt = null;
+
+// ==== next-song buffering control (buffer only after some seconds) ====
+const PRELOAD_AFTER_SECONDS = 7;     // start buffering the next song after N seconds of playback
+let nextPreloadStarted = false;      // per-track flag so we only preload once
+let nextBufferedForIndex = -1;       // which index the buffer currently holds
+
+// Hidden preloader element (never added to DOM)
+const bufferPlayer = new Audio();
+bufferPlayer.preload = "auto";
+
+function formatTime(seconds) {
+    if (isNaN(seconds)) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function updateProgress() {
+    if (player.duration) {
+        const progressPercent = (player.currentTime / player.duration) * 100;
+        progress.style.width = `${progressPercent}%`;
+        currentTimeEl.textContent = formatTime(player.currentTime);
+        durationEl.textContent = formatTime(player.duration);
+
+        // Start buffering the NEXT track only after some seconds of the CURRENT track
+        if (isPlaying && !nextPreloadStarted && player.currentTime >= PRELOAD_AFTER_SECONDS) {
+            preloadNext();
+        }
+    }
+}
+
+const SPOTIFY_CONFIG = {
+    clientId: '57e7d63ff50e46058facee08174119c7',
+    clientSecret: 'c8f8624cc0c245db82a065d2f8182f7c'
+};
+let spotifyAccessToken = null;
+let spotifyTokenExpiry = null;
+
+async function getSpotifyToken() {
+    if (spotifyAccessToken && Date.now() < spotifyTokenExpiry) return spotifyAccessToken;
+    const res = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic ' + btoa(SPOTIFY_CONFIG.clientId + ':' + SPOTIFY_CONFIG.clientSecret)
+        },
+        body: 'grant_type=client_credentials'
+    });
+    const data = await res.json();
+    spotifyAccessToken = data.access_token;
+    spotifyTokenExpiry = Date.now() + (data.expires_in * 1000);
+    return spotifyAccessToken;
+}
+
+async function searchSpotifyAlbumArt(songTitle, artistName) {
+    try {
+        const token = await getSpotifyToken();
+        const query = encodeURIComponent(`${songTitle} ${artistName}`);
+        const res = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=track&limit=1`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.tracks.items.length > 0) return data.tracks.items[0].album.images[0].url;
+    } catch {}
+    return getFallbackAlbumArt();
+}
+
+function getFallbackAlbumArt() {
+    return 'https://avatars.githubusercontent.com/u/127679210?v=4';
+}
+
+async function updateSongInfo(songData) {
+    currentSongData = songData;
+    titleEl.textContent = songData.title || "Unknown Title";
+    currentAlbumArt = await searchSpotifyAlbumArt(songData.title, songData.artist);
+    coverImg.src = currentAlbumArt;
+    bgImg.src = currentAlbumArt;
+}
+
+// Shuffle utility
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function togglePlayPause() {
+    if (isPlaying) {
+        player.pause();
+        playBtn.classList.replace('fa-pause', 'fa-play');
+        isPlaying = false;
+    } else {
+        player.play();
+        playBtn.classList.replace('fa-play', 'fa-pause');
+        isPlaying = true;
+    }
+}
+
+// ------- Buffering helpers -------
+function normalizeMatch(a, b) {
+    // compares absolute/relative src safely
+    if (!a || !b) return false;
+    return a === b || a.endsWith(b) || b.endsWith(a);
+}
+
+function preloadNext() {
+    if (items.length === 0) return;
+
+    // figure next index WITHOUT advancing pointer
+    let nextIndex = currentIndex;
+    if (nextIndex >= items.length) nextIndex = 0;
+
+    const nextSong = items[nextIndex];
+    const nextSrc = nextSong.audioUrl || nextSong.filename;
+
+    // set buffer only once per track
+    bufferPlayer.src = nextSrc;
+    bufferPlayer.preload = "auto";
+    bufferPlayer.load?.(); // in some browsers .load() kicks buffering
+    nextPreloadStarted = true;
+    nextBufferedForIndex = nextIndex;
+}
+
+function playNext() {
+    if (items.length === 0) return;
+
+    if (currentIndex >= items.length) {
+        shuffleArray(items);
+        currentIndex = 0;
+    }
+
+    const song = items[currentIndex];
+    const expectedSrc = song.audioUrl || song.filename;
+    updateSongInfo({ title: song.title, artist: song.artist });
+
+    // If the buffer already has THIS song ready, use it; else set src normally
+    if (nextBufferedForIndex === currentIndex &&
+        normalizeMatch(bufferPlayer.src, expectedSrc) &&
+        bufferPlayer.readyState >= 2 /* HAVE_CURRENT_DATA */) {
+        player.src = bufferPlayer.src;
+    } else {
+        player.src = expectedSrc;
+    }
+
+    // reset preload flags for the *newly started* track;
+    // we will start buffering the next one only after PRELOAD_AFTER_SECONDS
+    nextPreloadStarted = false;
+    nextBufferedForIndex = -1;
+
+    player.onerror = () => {
+        console.error('Failed to load audio:', song.title);
+        currentIndex++;
+        setTimeout(playNext, 1000);
+    };
+
+    player.oncanplay = () => {
+        if (isPlaying) {
+            player.play().catch(error => {
+                console.error('Autoplay failed:', error);
+                isPlaying = false;
+                playBtn.classList.replace('fa-pause', 'fa-play');
+            });
+        }
+    };
+
+    currentIndex++; // advance pointer to the item that will become "next"
+}
+
+function playPrev() {
+    currentIndex = Math.max(0, currentIndex - 2);
+    playNext();
+}
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        fullscreenBtn.querySelector('i').classList.replace('fa-expand', 'fa-compress');
+    } else {
+        document.exitFullscreen();
+        fullscreenBtn.querySelector('i').classList.replace('fa-compress', 'fa-expand');
+    }
+}
+
+async function initPlayer() {
+    items = await loadSongList();
+    if (items.length === 0) {
+        titleEl.textContent = "No songs available";
+        return;
+    }
+    shuffleArray(items);
+    currentIndex = 0;
+
+    // Load first song (do NOT buffer next yet)
+    const song = items[currentIndex];
+    updateSongInfo({ title: song.title, artist: song.artist });
+    player.src = song.audioUrl || song.filename;
+
+    // We mark that no preload has started for this first track.
+    nextPreloadStarted = false;
+    nextBufferedForIndex = -1;
+
+    currentIndex++; // point to what will be "next"
+}
+
+playBtn.addEventListener('click', togglePlayPause);
+nextBtn.addEventListener('click', playNext);
+prevBtn.addEventListener('click', playPrev);
+fullscreenBtn.addEventListener('click', toggleFullscreen);
+player.addEventListener('timeupdate', updateProgress);
+player.addEventListener('ended', () => {
+    playNext();
+});
+
+// Fallback: Check if song has ended but event didn't fire
+setInterval(() => {
+    if (isPlaying && player.duration && player.currentTime >= player.duration - 0.1) {
+        playNext();
+    }
+}, 1000);
+
+playerProgress.addEventListener('click', e => {
+    player.currentTime = (e.offsetX / playerProgress.clientWidth) * player.duration;
+});
+
+initPlayer();
+
+
+// ====== CONFIG: replace these with values from your Firebase console ======
+const firebaseConfig = {
+    apiKey: "AIzaSyBgWvYqf2pv2iCyMe8Ui7BKrVjGHXGoSfI",
+    authDomain: "livecountupdate.firebaseapp.com",
+    databaseURL: "https://livecountupdate-default-rtdb.firebaseio.com",
+    projectId: "livecountupdate",
+    storageBucket: "livecountupdate.firebasestorage.app",
+    messagingSenderId: "392205412851",
+    appId: "1:392205412851:web:3734f056ed22322ff7ca86"
+};
+// ========================================================================
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// Safe room name based on page path
+const room = (location.pathname || "/")
+  .replace(/\//g, "_")            // replace slashes with underscores
+  .replace(/[.#$\[\]]/g, "_")     // remove illegal Firebase chars
+  || "_root";
+
+// Reference to the room's viewers node
+const viewersRef = db.ref("viewers/" + room);
+
+// Create a unique id for this visitor
+const myId = Date.now().toString() + "_" + Math.random().toString(36).substr(2, 9);
+
+// Add self to viewers list
+viewersRef.child(myId).set({ ts: firebase.database.ServerValue.TIMESTAMP })
+  .catch(err => console.error("Add viewer failed:", err));
+
+// Remove on disconnect
+viewersRef.child(myId).onDisconnect().remove();
+
+// Listen for changes and update count
+viewersRef.on("value", snapshot => {
+  const cnt = snapshot ? snapshot.numChildren() : 0;
+  document.getElementById("livecount").innerText = cnt;
+});
+
+// Optional: cleanup stale entries (in case onDisconnect fails)
+setInterval(async () => {
+  try {
+    const snap = await viewersRef.once("value");
+    const now = Date.now();
+    snap.forEach(child => {
+      const val = child.val();
+      if (val && val.ts && (now - val.ts) > (1000 * 60 * 10)) {
+        viewersRef.child(child.key).remove().catch(()=>{});
+      }
+    });
+  } catch (e) { /* ignore cleanup errors */ }
+}, 1000 * 60 * 5); // every 5 minutes
+</script>
+
+
+</body>
+</html>
