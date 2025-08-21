@@ -465,6 +465,28 @@ body {
   opacity: 0.8;
 }
 
+/* Visualizer wrapper and canvas for audio-reactive volume */
+.volume__slider-wrap {
+  position: relative;
+  flex: 1;
+  height: 18px;
+  display: flex;
+  align-items: center;
+}
+.volume__viz {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 8px;
+  border-radius: 10px;
+  pointer-events: none;
+}
+/* Override slider background to be transparent; canvas will show visual */
+.volume__slider {
+  height: 18px;
+  background: transparent !important;
+}
+
 /* Fullscreen button styling */
 .fullscreen-btn {
   position: fixed;
@@ -711,15 +733,17 @@ body {
                     <button class="volume__icon" @click="toggleMute" :title="isMuted ? 'Unmute' : 'Mute'">
                         <i :class="isMuted || volume === 0 ? 'fa-solid fa-volume-xmark' : (volume < 0.5 ? 'fa-solid fa-volume-low' : 'fa-solid fa-volume-high')"></i>
                     </button>
-                    <input
-                        class="volume__slider"
-                        type="range"
-                        min="0" max="1" step="0.01"
-                        :value="volume"
-                        @input="onVolumeInput($event)"
-                        :style="{ backgroundSize: (volume * 100) + '% 100%' }"
-                        aria-label="Volume"
-                    />
+                    <div class="volume__slider-wrap">
+                        <canvas ref="volumeViz" class="volume__viz"></canvas>
+                        <input
+                            class="volume__slider"
+                            type="range"
+                            min="0" max="1" step="0.01"
+                            :value="volume"
+                            @input="onVolumeInput($event)"
+                            aria-label="Volume"
+                        />
+                    </div>
                     <div class="volume__value">{{ Math.round(volume * 100) }}%</div>
                 </div>
             </div>
@@ -929,19 +953,33 @@ new Vue({
             clientSecret: 'c8f8624cc0c245db82a065d2f8182f7c'
         },
         spotifyAccessToken: null,
-        spotifyTokenExpiry: null
+        spotifyTokenExpiry: null,
+        audioCtx: null,
+        analyser: null,
+        sourceNode: null,
+        vizDataArray: null,
+        vizRafId: null
       };
     },
     methods: {
       async loadSongList() {
-        try {
-          const response = await fetch("https://raw.githubusercontent.com/forzayt/forzaRadio/refs/heads/main/songs.json");
-          if (response.ok) return await response.json();
-          throw new Error('Failed to load songs.json');
-        } catch (error) {
-          console.error(error);
-          return [];
+        const sources = [
+          "https://raw.githubusercontent.com/forzayt/forzaRadio/main/songs.json", // correct raw URL
+          "songs.json" // local fallback
+        ];
+        for (const url of sources) {
+          try {
+            const response = await fetch(url, { cache: "no-store" });
+            if (response.ok) {
+              const data = await response.json();
+              if (Array.isArray(data) && data.length > 0) return data;
+            }
+          } catch (error) {
+            console.warn("Failed to load songs from", url, error);
+          }
         }
+        console.error('Failed to load songs.json from all sources');
+        return [];
       },
 
       applyVolume(v) {
@@ -966,6 +1004,97 @@ new Vue({
         } else {
           this.applyVolume(0);
         }
+      },
+
+      ensureAudioContext() {
+        if (!this.audioCtx) {
+          try {
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            this.audioCtx = new Ctx();
+          } catch (e) {
+            console.warn('Web Audio not supported.');
+            return false;
+          }
+        }
+        if (this.audioCtx.state === 'suspended') {
+          this.audioCtx.resume().catch(()=>{});
+        }
+        if (!this.analyser) {
+          this.analyser = this.audioCtx.createAnalyser();
+          this.analyser.fftSize = 256;
+        }
+        if (!this.sourceNode) {
+          try {
+            this.sourceNode = this.audioCtx.createMediaElementSource(this.audio);
+            this.sourceNode.connect(this.analyser);
+            this.analyser.connect(this.audioCtx.destination);
+          } catch (e) {
+            // In some browsers creating second source for same media throws, ignore
+          }
+        }
+        const bufferLength = this.analyser.frequencyBinCount;
+        if (!this.vizDataArray || this.vizDataArray.length !== bufferLength) {
+          this.vizDataArray = new Uint8Array(bufferLength);
+        }
+        return true;
+      },
+
+      startVolumeVisualizer() {
+        const canvas = this.$refs.volumeViz;
+        if (!canvas) return;
+        const parent = canvas.parentElement;
+        canvas.width = parent.clientWidth;
+        canvas.height = 8;
+        const ctx = canvas.getContext('2d');
+
+        const draw = () => {
+          if (!this.analyser) return;
+          this.analyser.getByteFrequencyData(this.vizDataArray);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // Map only lower frequencies for smoother bar
+          const sampleCount = 48; // number of segments across width
+          const step = Math.floor(this.vizDataArray.length / sampleCount);
+          const barWidth = canvas.width / sampleCount;
+
+          for (let i = 0; i < sampleCount; i++) {
+            const idx = i * step;
+            const val = this.vizDataArray[idx] / 255; // 0..1
+            const h = Math.max(2, Math.round(val * canvas.height));
+
+            // Gradient color matching existing rainbow theme
+            const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            grad.addColorStop(0.00, '#ff7eb3');
+            grad.addColorStop(0.20, '#ff758c');
+            grad.addColorStop(0.40, '#f9d423');
+            grad.addColorStop(0.60, '#ff4e50');
+            grad.addColorStop(0.80, '#43cea2');
+            grad.addColorStop(1.00, '#185a9d');
+            ctx.fillStyle = grad;
+
+            const x = i * barWidth;
+            const y = (canvas.height - h) / 2; // center vertically
+
+            // Draw rounded mini-rects forming a continuous bar feel
+            const radius = Math.min(3, h / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + barWidth - radius, y);
+            ctx.quadraticCurveTo(x + barWidth, y, x + barWidth, y + radius);
+            ctx.lineTo(x + barWidth, y + h - radius);
+            ctx.quadraticCurveTo(x + barWidth, y + h, x + barWidth - radius, y + h);
+            ctx.lineTo(x + radius, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.fill();
+          }
+
+          this.vizRafId = requestAnimationFrame(draw);
+        };
+
+        cancelAnimationFrame(this.vizRafId);
+        this.vizRafId = requestAnimationFrame(draw);
       },
 
       formatTime(seconds) {
@@ -1157,6 +1286,9 @@ new Vue({
       },
 
       play() {
+        // Ensure audio context and visualizer are running on user interaction
+        this.ensureAudioContext();
+        this.startVolumeVisualizer();
         if (this.audio.paused) {
           this.audio.play();
           this.isTimerPlaying = true;
@@ -1259,10 +1391,14 @@ new Vue({
       
       // Initialize buffer player
       this.bufferPlayer = new Audio();
+      this.bufferPlayer.crossOrigin = "anonymous";
       this.bufferPlayer.preload = "auto";
 
       // Initialize main audio
       this.audio = new Audio();
+      this.audio.crossOrigin = "anonymous";
+      this.audio.playsInline = true;
+      this.audio.preload = "auto";
       this.audio.volume = this.volume;
       
       this.audio.ontimeupdate = function() {
@@ -1281,6 +1417,25 @@ new Vue({
 
       // Initialize player
       await this.initPlayer();
+
+      // Prepare AudioContext and start visualizer after first user interaction
+      const kickstart = () => {
+        if (this.ensureAudioContext()) {
+          this.startVolumeVisualizer();
+        }
+        window.removeEventListener('click', kickstart);
+        window.removeEventListener('touchstart', kickstart);
+      };
+      window.addEventListener('click', kickstart, { once: true });
+      window.addEventListener('touchstart', kickstart, { once: true });
+
+      // Keep visualizer responsive to resize
+      window.addEventListener('resize', () => {
+        const canvas = this.$refs.volumeViz;
+        if (canvas && canvas.parentElement) {
+          canvas.width = canvas.parentElement.clientWidth;
+        }
+      });
 
       // Fallback: Check if song has ended but event didn't fire
       setInterval(() => {
