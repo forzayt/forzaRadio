@@ -469,7 +469,7 @@ body {
 .volume__slider-wrap {
   position: relative;
   flex: 1;
-  height: 18px;
+  height: 50px;
   display: flex;
   align-items: center;
 }
@@ -477,14 +477,14 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  height: 18px;
-  border-radius: 10px;
+  height: 50px;
+  
   pointer-events: none;
   z-index: 1;
 }
 /* Override slider background to be transparent; canvas will show visual */
 .volume__slider {
-  height: 18px;
+  height: 50px;
   background: transparent !important;
   position: relative;
   z-index: 2;
@@ -1065,15 +1065,14 @@ new Vue({
             const val = this.vizDataArray[idx] / 255; // 0..1
             const h = Math.max(2, Math.round(val * canvas.height));
 
-            // Gradient color matching existing rainbow theme
-            const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
-            grad.addColorStop(0.00, '#ff7eb3');
-            grad.addColorStop(0.20, '#ff758c');
-            grad.addColorStop(0.40, '#f9d423');
-            grad.addColorStop(0.60, '#ff4e50');
-            grad.addColorStop(0.80, '#43cea2');
-            grad.addColorStop(1.00, '#185a9d');
-            ctx.fillStyle = grad;
+            // Dynamic rainbow similar to progress bar but more lively
+            const time = performance.now() * 0.002; // animation speed
+            const baseHue = (i / sampleCount) * 360;
+            const hue = (baseHue + time * 60 + val * 60) % 360;
+            const lightness = 50 + Math.round(val * 20);
+            ctx.fillStyle = `hsl(${hue}, 85%, ${lightness}%)`;
+            ctx.shadowColor = `hsla(${hue}, 85%, ${lightness}%, 0.6)`;
+            ctx.shadowBlur = 8;
 
             const x = i * barWidth;
             const y = (canvas.height - h) / 2; // center vertically
