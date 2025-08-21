@@ -407,6 +407,64 @@ body {
   }
 }
 
+/* Volume control */
+.volume {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.volume__icon {
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+.volume__icon:hover { transform: scale(1.1); }
+.volume__slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  background-image: linear-gradient(90deg, #ff7eb3, #ff758c, #f9d423, #ff4e50, #43cea2, #185a9d);
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  cursor: pointer;
+}
+.volume__slider:focus { outline: none; }
+.volume__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0px 5px 10px 0px rgba(76, 70, 124, 0.2);
+  
+}
+.volume__slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0px 5px 10px 0px rgba(76, 70, 124, 0.2);
+}
+.volume__value {
+  min-width: 36px;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
 /* Fullscreen button styling */
 .fullscreen-btn {
   position: fixed;
@@ -648,6 +706,22 @@ body {
                     <div class="progress__time">{{ currentTime }}</div>
                     <div class="progress__duration">{{ duration }}</div>
                 </div>
+                <!-- Volume control -->
+                <div class="volume">
+                    <button class="volume__icon" @click="toggleMute" :title="isMuted ? 'Unmute' : 'Mute'">
+                        <i :class="isMuted || volume === 0 ? 'fa-solid fa-volume-xmark' : (volume < 0.5 ? 'fa-solid fa-volume-low' : 'fa-solid fa-volume-high')"></i>
+                    </button>
+                    <input
+                        class="volume__slider"
+                        type="range"
+                        min="0" max="1" step="0.01"
+                        :value="volume"
+                        @input="onVolumeInput($event)"
+                        :style="{ backgroundSize: (volume * 100) + '% 100%' }"
+                        aria-label="Volume"
+                    />
+                    <div class="volume__value">{{ Math.round(volume * 100) }}%</div>
+                </div>
             </div>
             <div v-cloak></div>
         </div>
@@ -833,6 +907,9 @@ new Vue({
         duration: null,
         currentTime: null,
         isTimerPlaying: false,
+        volume: 0.8,
+        lastNonZeroVolume: 0.8,
+        isMuted: false,
         tracks: [],
         currentTrack: null,
         currentTrackIndex: 0,
@@ -864,6 +941,30 @@ new Vue({
         } catch (error) {
           console.error(error);
           return [];
+        }
+      },
+
+      applyVolume(v) {
+        const clamped = Math.max(0, Math.min(1, v));
+        this.volume = clamped;
+        if (this.audio) {
+          this.audio.volume = clamped;
+          this.isMuted = clamped === 0;
+          if (!this.isMuted && clamped > 0) this.lastNonZeroVolume = clamped;
+        }
+      },
+
+      onVolumeInput(e) {
+        const v = parseFloat(e.target.value);
+        this.applyVolume(isNaN(v) ? 0 : v);
+      },
+
+      toggleMute() {
+        if (this.isMuted || this.volume === 0) {
+          const restore = this.lastNonZeroVolume > 0 ? this.lastNonZeroVolume : 0.8;
+          this.applyVolume(restore);
+        } else {
+          this.applyVolume(0);
         }
       },
 
@@ -1162,6 +1263,7 @@ new Vue({
 
       // Initialize main audio
       this.audio = new Audio();
+      this.audio.volume = this.volume;
       
       this.audio.ontimeupdate = function() {
         vm.updateProgress();
