@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Bitter:400,700&display=swap&subset=latin-ext"
         rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css">
+
     <title>ForzaRadio - IA Music Player</title>
     
     <!-- Firebase SDKs -->
@@ -15,6 +15,570 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <link rel="icon" id="icon" href="https://forzayt.github.io/assets/emoji.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* author: Muhammed Erdem
+https://codepen.io/JavaScriptJunkie/pen/qBWrRyg */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+body {
+  background: #dfe7ef;
+  font-family: "Bitter", serif;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+.background {
+  position: fixed;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  z-index: -1;
+}
+
+.background img {
+  position: absolute;
+  margin: auto;
+  top: 0; left: 0; bottom: 0; right: 0;
+  min-width: 50%;
+  min-height: 50%;
+  filter: blur(15px);
+  -webkit-filter: blur(50px);
+  transform: scale(1.1);
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-size: cover;
+}
+@media screen and (max-width: 700px), (max-height: 500px) {
+  .wrapper {
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+}
+
+.player {
+  background: rgba(238, 243, 247, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  width: 500px;
+  min-height: 580px;
+  box-shadow: 
+    0px 15px 35px -5px rgba(50, 88, 130, 0.32),
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+@media screen and (max-width: 576px), (max-height: 500px) {
+  .player {
+    width: 95%;
+    padding: 20px;
+    margin-top: 75px;
+    min-height: initial;
+    padding-bottom: 30px;
+    max-width: 400px;
+  }
+}
+.player__top {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  z-index: 4;
+}
+@media screen and (max-width: 576px), (max-height: 500px) {
+  .player__top {
+    flex-wrap: wrap;
+  }
+}
+.player-cover {
+  width: 340px;
+  height: 340px;
+  margin-left: -80px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  border-radius: 15px;
+  z-index: 1;
+}
+@media screen and (max-width: 576px), (max-height: 500px) {
+  .player-cover {
+    margin-top: -70px;
+    margin-bottom: 25px;
+    width: 300px;
+    height: 260px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+.player-cover__item {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: all 0.5s ease-in-out;
+  opacity: 1;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+}
+.player-cover__item:before {
+  content: "";
+  background: inherit;
+  width: 100%;
+  height: 100%;
+  box-shadow: 
+    0px 15px 50px 0px rgba(76, 70, 124, 0.6),
+    0px 8px 25px 0px rgba(0, 0, 0, 0.4);
+  display: block;
+  z-index: 1;
+  position: absolute;
+  top: 35px;
+  transform: scale(0.85);
+  filter: blur(15px);
+  opacity: 0.8;
+  border-radius: 15px;
+}
+.player-cover__item:after {
+  content: "";
+  background: inherit;
+  width: 100%;
+  height: 100%;
+  box-shadow: 
+    0px 10px 40px 0px rgba(76, 70, 124, 0.5),
+    0 0 0 2px rgba(255, 255, 255, 0.1);
+  display: block;
+  z-index: 2;
+  position: absolute;
+  border-radius: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+.player-cover__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0px 10px 40px 0px rgba(76, 70, 124, 0.5);
+  user-select: none;
+  pointer-events: none;
+  transition: all 0.5s ease-in-out;
+  opacity: 1;
+}
+
+/* Hover effects for album art */
+.player-cover:hover .player-cover__item {
+  transform: scale(1.05);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.4),
+    0 12px 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.player-cover:hover .player-cover__item:before {
+  transform: scale(0.8);
+  filter: blur(20px);
+  opacity: 0.7;
+}
+.player-controls {
+  flex: 1;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media screen and (max-width: 576px), (max-height: 500px) {
+  .player-controls {
+    flex-direction: row;
+    padding-left: 0;
+    width: 100%;
+    flex: unset;
+  }
+}
+.player-controls__item {
+  display: inline-flex;
+  font-size: 35px;
+  padding: 8px;
+  margin-bottom: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+@media screen and (max-width: 576px), (max-height: 500px) {
+  .player-controls__item {
+    font-size: 26px;
+    padding: 5px;
+    margin-right: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 0;
+  }
+}
+.player-controls__item::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #fff;
+  transform: scale(0.5);
+  opacity: 0;
+  box-shadow: 0px 5px 10px 0px rgba(76, 70, 124, 0.2);
+  transition: all 0.3s ease-in-out;
+  transition: all 0.4s cubic-bezier(0.35, 0.57, 0.13, 0.88);
+}
+@media screen and (min-width: 500px) {
+  .player-controls__item:hover {
+    color: #ffffff;
+  }
+  .player-controls__item:hover::before {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+@media screen and (max-width: 576px), (max-height: 500px) {
+  .player-controls__item:active {
+    color: #ffffff;
+  }
+  .player-controls__item:active::before {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+.player-controls__item .icon {
+  position: relative;
+  z-index: 2;
+}
+.player-controls__item.-xl {
+  margin-bottom: 0;
+  font-size: 95px;
+  filter: drop-shadow(0 11px 6px rgba(172, 184, 204, 0.45));
+  color: #fff;
+  width: auto;
+  height: auto;
+  display: inline-flex;
+}
+@media screen and (max-width: 576px), (max-height: 500px) {
+  .player-controls__item.-xl {
+    margin-left: auto;
+    font-size: 75px;
+    margin-right: 0;
+  }
+}
+.player-controls__item.-xl:before {
+  display: none;
+}
+.player-controls__item.-favorite.active {
+  color: #ff6b6b;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+[v-cloak] > * {
+  display: none;
+}
+
+.progress {
+  width: 100%;
+  margin-top: -15px;
+  user-select: none;
+}
+.progress__top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.progress__duration {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+  font-size: 24px;
+  opacity: 0.8;
+}
+.progress__time {
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 700;
+  font-size: 20px;
+  opacity: 0.8;
+}
+
+.progress__bar {
+  height: 8px;
+  width: 100%;
+  cursor: default;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: inline-block;
+  border-radius: 10px;
+}
+
+.progress__current {
+  height: inherit;
+  width: 0%;
+  background: linear-gradient(90deg, #ff7eb3, #ff758c, #f9d423, #ff4e50, #43cea2, #185a9d);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+  border-radius: 10px;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.album-info {
+  color: rgba(255, 255, 255, 0.9);
+  flex: 1;
+  padding-right: 60px;
+  user-select: none;
+}
+@media screen and (max-width: 576px), (max-height: 500px) {
+  .album-info {
+    padding-right: 30px;
+  }
+}
+
+/* bottom row under progress bar */
+.progress__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.album-info__name {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  line-height: 1.3em;
+}
+@media screen and (max-width: 576px), (max-height: 500px) {
+  .album-info__name {
+    font-size: 18px;
+    margin-bottom: 9px;
+  }
+}
+.album-info__track {
+  font-weight: 400;
+  font-size: 20px;
+  opacity: 0.7;
+  line-height: 1.3em;
+  min-height: 52px;
+}
+@media screen and (max-width: 576px), (max-height: 500px) {
+  .album-info__track {
+    font-size: 18px;
+    min-height: 50px;
+  }
+}
+
+/* Fullscreen button styling */
+.fullscreen-btn {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  border: none;
+  background: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  padding: 8px;
+}
+
+.fullscreen-btn:hover {
+  transform: scale(1.1);
+  color: #1ed760;
+}
+
+.fullscreen-btn:active {
+  transform: scale(0.95);
+}
+
+/* Live count styling */
+.live-count {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.live-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: #43b581;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.listeners-text {
+  font-family: 'Bitter', serif;
+  opacity: 0.85;
+}
+
+@media screen and (max-width: 576px), (max-height: 500px) {
+  .fullscreen-btn {
+    top: 10px;
+    right: 12px;
+    font-size: 22px;
+  }
+  .live-count {
+    top: 12px;
+    left: 12px;
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
+.github-btn {
+  position: absolute;
+  right: 40px;
+  bottom: 50px;
+  text-decoration: none;
+  padding: 15px 25px;
+  border-radius: 4px;
+  box-shadow: 0px 4px 30px -6px rgba(36, 52, 70, 0.65);
+  background: #24292e;
+  color: #fff;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
+}
+@media screen and (min-width: 500px) {
+  .github-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 17px 20px -6px rgba(36, 52, 70, 0.36);
+  }
+}
+@media screen and (max-width: 700px) {
+  .github-btn {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    margin-top: 20px;
+  }
+  .github-btn:active {
+    transform: scale(1.1);
+    box-shadow: 0px 17px 20px -6px rgba(36, 52, 70, 0.36);
+  }
+}
+
+.scale-out-enter-active {
+  transition: all 0.35s ease-in-out;
+}
+
+.scale-out-leave-active {
+  transition: all 0.35s ease-in-out;
+}
+
+.scale-out-enter {
+  transform: scale(0.55);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.scale-out-leave-to {
+  transform: scale(1.2);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.scale-in-enter-active {
+  transition: all 0.35s ease-in-out;
+}
+
+.scale-in-leave-active {
+  transition: all 0.35s ease-in-out;
+}
+
+.scale-in-enter {
+  transform: scale(1.2);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.scale-in-leave-to {
+  transform: scale(0.55);
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Image transition classes for smooth album cover changes */
+.cover-fade-enter-active {
+  transition: opacity 0.5s ease-in-out;
+}
+
+.cover-fade-leave-active {
+  transition: opacity 0.5s ease-in-out;
+}
+
+.cover-fade-enter {
+  opacity: 0;
+}
+
+.cover-fade-leave-to {
+  opacity: 0;
+}
+
+.cover-fade-enter-to {
+  opacity: 1;
+}
+
+.cover-fade-leave {
+  opacity: 1;
+}
+
+    </style>
 </head>
 
 <body>
@@ -254,6 +818,377 @@
     }
 
     document.getElementById('fullscreen-toggle').addEventListener('click', toggleFullscreen);
+    /*
+ForzaRadio - IA Music Player
+Implementing current playing logic from original index.html
+*/
+
+new Vue({
+    el: "#app",
+    data() {
+      return {
+        audio: null,
+        circleLeft: null,
+        barWidth: null,
+        duration: null,
+        currentTime: null,
+        isTimerPlaying: false,
+        tracks: [],
+        currentTrack: null,
+        currentTrackIndex: 0,
+        transitionName: null,
+        items: [],
+        currentIndex: 0,
+        isPlaying: false,
+        currentSongData: null,
+        currentAlbumArt: null,
+        nextPreloadStarted: false,
+        nextBufferedForIndex: -1,
+        bufferPlayer: null,
+        PRELOAD_AFTER_SECONDS: 7,
+        preloadedImages: new Map(), // Store preloaded images
+        SPOTIFY_CONFIG: {
+            clientId: '57e7d63ff50e46058facee08174119c7',
+            clientSecret: 'c8f8624cc0c245db82a065d2f8182f7c'
+        },
+        spotifyAccessToken: null,
+        spotifyTokenExpiry: null
+      };
+    },
+    methods: {
+      async loadSongList() {
+        try {
+          const response = await fetch("https://raw.githubusercontent.com/forzayt/forzaRadio/refs/heads/main/songs.json");
+          if (response.ok) return await response.json();
+          throw new Error('Failed to load songs.json');
+        } catch (error) {
+          console.error(error);
+          return [];
+        }
+      },
+
+      formatTime(seconds) {
+        if (isNaN(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+      },
+
+      updateProgress() {
+        if (this.audio.duration) {
+          const progressPercent = (this.audio.currentTime / this.audio.duration) * 100;
+          this.barWidth = progressPercent + "%";
+          this.circleLeft = progressPercent + "%";
+          this.currentTime = this.formatTime(this.audio.currentTime);
+          this.duration = this.formatTime(this.audio.duration);
+
+          // Start buffering the NEXT track only after some seconds of the CURRENT track
+          if (this.isPlaying && !this.nextPreloadStarted && this.audio.currentTime >= this.PRELOAD_AFTER_SECONDS) {
+            this.preloadNext();
+          }
+        }
+      },
+
+      async getSpotifyToken() {
+        if (this.spotifyAccessToken && Date.now() < this.spotifyTokenExpiry) return this.spotifyAccessToken;
+        const res = await fetch('https://accounts.spotify.com/api/token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic ' + btoa(this.SPOTIFY_CONFIG.clientId + ':' + this.SPOTIFY_CONFIG.clientSecret)
+          },
+          body: 'grant_type=client_credentials'
+        });
+        const data = await res.json();
+        this.spotifyAccessToken = data.access_token;
+        this.spotifyTokenExpiry = Date.now() + (data.expires_in * 1000);
+        return this.spotifyAccessToken;
+      },
+
+      async searchSpotifyAlbumArt(songTitle, artistName) {
+        try {
+          const token = await this.getSpotifyToken();
+          const query = encodeURIComponent(`${songTitle} ${artistName}`);
+          const res = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=track&limit=1`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          const data = await res.json();
+          if (data.tracks.items.length > 0) return data.tracks.items[0].album.images[0].url;
+        } catch {}
+        return this.getFallbackAlbumArt();
+      },
+
+      getFallbackAlbumArt() {
+        return 'https://avatars.githubusercontent.com/u/127679210?v=4';
+      },
+
+      // Preload album art image
+      async preloadAlbumArt(songData) {
+        try {
+          const imageUrl = await this.searchSpotifyAlbumArt(songData.title, songData.artist);
+          const key = `${songData.title}-${songData.artist}`;
+          
+          if (!this.preloadedImages.has(key)) {
+            const img = new Image();
+            img.onload = () => {
+              this.preloadedImages.set(key, imageUrl);
+              console.log(`Preloaded album art for: ${songData.title}`);
+            };
+            img.onerror = () => {
+              console.warn(`Failed to preload album art for: ${songData.title}`);
+            };
+            img.src = imageUrl;
+          }
+        } catch (error) {
+          console.warn('Error preloading album art:', error);
+        }
+      },
+
+      // Get preloaded album art or fetch it
+      async getAlbumArt(songData) {
+        const key = `${songData.title}-${songData.artist}`;
+        
+        // Check if image is already preloaded
+        if (this.preloadedImages.has(key)) {
+          return this.preloadedImages.get(key);
+        }
+        
+        // If not preloaded, fetch and cache it
+        const imageUrl = await this.searchSpotifyAlbumArt(songData.title, songData.artist);
+        this.preloadedImages.set(key, imageUrl);
+        return imageUrl;
+      },
+
+      async updateSongInfo(songData) {
+        this.currentSongData = songData;
+        
+        // Use preloaded image if available, otherwise fetch it
+        const coverUrl = await this.getAlbumArt(songData);
+        
+        this.currentTrack = {
+          name: songData.title || "Unknown Title",
+          cover: coverUrl,
+          source: songData.audioUrl || songData.filename,
+          favorited: false
+        };
+        this.currentAlbumArt = this.currentTrack.cover;
+        
+        // Smoothly transition background image
+        await this.transitionBackgroundImage(this.currentAlbumArt);
+      },
+
+      shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      },
+
+      normalizeMatch(a, b) {
+        if (!a || !b) return false;
+        return a === b || a.endsWith(b) || b.endsWith(a);
+      },
+
+      preloadNext() {
+        if (this.items.length === 0) return;
+
+        let nextIndex = this.currentIndex;
+        if (nextIndex >= this.items.length) nextIndex = 0;
+
+        const nextSong = this.items[nextIndex];
+        const nextSrc = nextSong.audioUrl || nextSong.filename;
+
+        this.bufferPlayer.src = nextSrc;
+        this.bufferPlayer.preload = "auto";
+        this.bufferPlayer.load?.();
+        this.nextPreloadStarted = true;
+        this.nextBufferedForIndex = nextIndex;
+
+        // Also preload the album art for the next track
+        this.preloadAlbumArt(nextSong);
+      },
+
+      playNext() {
+        if (this.items.length === 0) return;
+
+        if (this.currentIndex >= this.items.length) {
+          this.shuffleArray(this.items);
+          this.currentIndex = 0;
+        }
+
+        const song = this.items[this.currentIndex];
+        const expectedSrc = song.audioUrl || song.filename;
+        this.updateSongInfo({ title: song.title, artist: song.artist });
+
+        if (this.nextBufferedForIndex === this.currentIndex &&
+            this.normalizeMatch(this.bufferPlayer.src, expectedSrc) &&
+            this.bufferPlayer.readyState >= 2) {
+          this.audio.src = this.bufferPlayer.src;
+        } else {
+          this.audio.src = expectedSrc;
+        }
+
+        this.nextPreloadStarted = false;
+        this.nextBufferedForIndex = -1;
+
+        this.audio.onerror = () => {
+          console.error('Failed to load audio:', song.title);
+          this.currentIndex++;
+          setTimeout(() => this.playNext(), 1000);
+        };
+
+        this.audio.oncanplay = () => {
+          if (this.isPlaying) {
+            this.audio.play().catch(error => {
+              console.error('Autoplay failed:', error);
+              this.isPlaying = false;
+              this.isTimerPlaying = false;
+            });
+          }
+        };
+
+        this.currentIndex++;
+      },
+
+      playPrev() {
+        this.currentIndex = Math.max(0, this.currentIndex - 2);
+        this.playNext();
+      },
+
+      play() {
+        if (this.audio.paused) {
+          this.audio.play();
+          this.isTimerPlaying = true;
+          this.isPlaying = true;
+        } else {
+          this.audio.pause();
+          this.isTimerPlaying = false;
+          this.isPlaying = false;
+        }
+      },
+
+      clickProgress(e) {
+        this.isTimerPlaying = true;
+        this.isPlaying = true;
+        this.audio.pause();
+        this.updateBar(e.pageX);
+      },
+
+      updateBar(x) {
+        let progress = this.$refs.progress;
+        let maxduration = this.audio.duration;
+        let position = x - progress.offsetLeft;
+        let percentage = (100 * position) / progress.offsetWidth;
+        if (percentage > 100) {
+          percentage = 100;
+        }
+        if (percentage < 0) {
+          percentage = 0;
+        }
+        this.barWidth = percentage + "%";
+        this.circleLeft = percentage + "%";
+        this.audio.currentTime = (maxduration * percentage) / 100;
+        this.audio.play();
+      },
+
+      prevTrack() {
+        this.transitionName = "scale-in";
+        this.playPrev();
+      },
+
+      nextTrack() {
+        this.transitionName = "scale-out";
+        this.playNext();
+      },
+
+      favorite() {
+        if (this.currentTrack) {
+          this.currentTrack.favorited = !this.currentTrack.favorited;
+        }
+      },
+
+      async initPlayer() {
+        this.items = await this.loadSongList();
+        if (this.items.length === 0) {
+          this.currentTrack = {
+            name: "No songs available",
+            cover: this.getFallbackAlbumArt(),
+            source: "",
+            favorited: false
+          };
+          return;
+        }
+        this.shuffleArray(this.items);
+        this.currentIndex = 0;
+
+        const song = this.items[this.currentIndex];
+        await this.updateSongInfo({ title: song.title, artist: song.artist });
+        this.audio.src = song.audioUrl || song.filename;
+
+        this.nextPreloadStarted = false;
+        this.nextBufferedForIndex = -1;
+
+        this.currentIndex++;
+      },
+
+
+
+      // Smoothly transition background image
+      async transitionBackgroundImage(newImageUrl) {
+        const bgImg = document.getElementById('bg-img');
+        if (bgImg) {
+          // Create a temporary image to preload
+          const tempImg = new Image();
+          tempImg.onload = () => {
+            // Once loaded, smoothly transition the background
+            bgImg.style.transition = 'opacity 0.5s ease-in-out';
+            bgImg.style.opacity = '0';
+            
+            setTimeout(() => {
+              bgImg.src = newImageUrl;
+              bgImg.style.opacity = '1';
+            }, 250);
+          };
+          tempImg.src = newImageUrl;
+        }
+      },
+    },
+    async created() {
+      let vm = this;
+      
+      // Initialize buffer player
+      this.bufferPlayer = new Audio();
+      this.bufferPlayer.preload = "auto";
+
+      // Initialize main audio
+      this.audio = new Audio();
+      
+      this.audio.ontimeupdate = function() {
+        vm.updateProgress();
+      };
+      
+      this.audio.onloadedmetadata = function() {
+        vm.updateProgress();
+      };
+      
+      this.audio.onended = function() {
+        vm.playNext();
+        vm.isTimerPlaying = true;
+        vm.isPlaying = true;
+      };
+
+      // Initialize player
+      await this.initPlayer();
+
+      // Fallback: Check if song has ended but event didn't fire
+      setInterval(() => {
+        if (this.isPlaying && this.audio.duration && this.audio.currentTime >= this.audio.duration - 0.1) {
+          this.playNext();
+        }
+      }, 1000);
+    }
+  });
+  
     </script>
 </body>
 
