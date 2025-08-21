@@ -507,7 +507,7 @@ body {
 
 .fullscreen-btn:hover {
   transform: scale(1.1);
-  color: #1ed760;
+  color: cyan;
 }
 
 .fullscreen-btn:active {
@@ -695,10 +695,8 @@ body {
                             <use xlink:href="#icon-heart-o"></use>
                         </svg>
                     </div>
-                    <a :href="`https://open.spotify.com/search/${encodeURIComponent(currentTrack.name)}`" target="_blank" class="player-controls__item" title="Search on Google">
-                        <svg class="icon">
-                            <use xlink:href="#icon-link"></use>
-                        </svg>
+                    <a :href="`https://open.spotify.com/search/${encodeURIComponent(currentTrack.name)}`" target="_blank" class="player-controls__item" title="Open on Spotify" aria-label="Open on Spotify">
+                        <i class="fa-brands fa-spotify"></i>
                     </a>
                     <div class="player-controls__item" @click="prevTrack">
                         <svg class="icon">
@@ -724,6 +722,7 @@ body {
                         <div class="album-info__name">{{ currentTrack.name }}</div>
                     </div>
                 </div>
+                <!--
                 <div class="progress__bar">
                     <div class="progress__current" :style="{ width : barWidth }"></div>
                 </div>
@@ -731,6 +730,7 @@ body {
                     <div class="progress__time">{{ currentTime }}</div>
                     <div class="progress__duration">{{ duration }}</div>
                 </div>
+                -->
                 <!-- Volume control -->
                 <div class="volume">
                     <button class="volume__icon" @click="toggleMute" :title="isMuted ? 'Unmute' : 'Mute'">
