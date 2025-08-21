@@ -477,14 +477,17 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  height: 8px;
+  height: 18px;
   border-radius: 10px;
   pointer-events: none;
+  z-index: 1;
 }
 /* Override slider background to be transparent; canvas will show visual */
 .volume__slider {
   height: 18px;
   background: transparent !important;
+  position: relative;
+  z-index: 2;
 }
 
 /* Fullscreen button styling */
@@ -1044,7 +1047,7 @@ new Vue({
         if (!canvas) return;
         const parent = canvas.parentElement;
         canvas.width = parent.clientWidth;
-        canvas.height = 8;
+        canvas.height = parent.clientHeight;
         const ctx = canvas.getContext('2d');
 
         const draw = () => {
@@ -1434,6 +1437,7 @@ new Vue({
         const canvas = this.$refs.volumeViz;
         if (canvas && canvas.parentElement) {
           canvas.width = canvas.parentElement.clientWidth;
+          canvas.height = canvas.parentElement.clientHeight;
         }
       });
 
