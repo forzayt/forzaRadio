@@ -407,31 +407,6 @@ body {
   }
 }
 
-.album-info__artist {
-  font-weight: 400;
-  font-size: 16px;
-  opacity: 0.8;
-  line-height: 1.4em;
-  margin-top: 8px;
-  color: rgba(255, 255, 255, 0.85);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.album-info__artist i {
-  font-size: 14px;
-  opacity: 0.7;
-}
-@media screen and (max-width: 576px), (max-height: 500px) {
-  .album-info__artist {
-    font-size: 14px;
-    margin-top: 6px;
-  }
-  .album-info__artist i {
-    font-size: 12px;
-  }
-}
-
 /* Volume control */
 .volume {
   display: flex;
@@ -1129,9 +1104,6 @@ body {
                 <div class="progress__top">
                     <div class="album-info" v-if="currentTrack">
                         <div class="album-info__name">{{ currentTrack.name }}</div>
-                        <div class="album-info__artist" v-if="currentTrack.contributingArtists">
-                            <i class="fa-solid fa-users"></i> {{ currentTrack.contributingArtists }}
-                        </div>
                     </div>
                 </div>
                 <!--
@@ -1456,207 +1428,6 @@ new Vue({
         return true;
       },
 
-      // Extract ID3 metadata from MP3 files
-      async extractID3Metadata(audioElement) {
-        try {
-          // Create a FileReader to read the audio file
-          const response = await fetch(audioElement.src);
-          const blob = await response.blob();
-          
-          // Read the first 10 bytes to check for ID3 header
-          const reader = new FileReader();
-          
-          return new Promise((resolve) => {
-            reader.onload = (e) => {
-              const arrayBuffer = e.target.result;
-              const uint8Array = new Uint8Array(arrayBuffer);
-              
-              // Check for ID3v2 header (starts with "ID3")
-              if (uint8Array[0] === 0x49 && uint8Array[1] === 0x44 && uint8Array[2] === 0x33) {
-                const metadata = this.parseID3v2(uint8Array);
-                resolve(metadata);
-              } else {
-                // Try to read the last 128 bytes for ID3v1
-                this.readID3v1FromEnd(blob).then(id3v1Metadata => {
-                  resolve(id3v1Metadata);
-                }).catch(() => {
-                  resolve(null);
-                });
-              }
-            };
-            
-            reader.readAsArrayBuffer(blob.slice(0, 1024)); // Read first 1KB for ID3v2
-          });
-        } catch (error) {
-          console.warn('Failed to extract ID3 metadata:', error);
-          return null;
-        }
-      },
-
-      // Read ID3v1 metadata from the end of the file
-      async readID3v1FromEnd(blob) {
-        try {
-          const reader = new FileReader();
-          return new Promise((resolve) => {
-            reader.onload = (e) => {
-              const arrayBuffer = e.target.result;
-              const uint8Array = new Uint8Array(arrayBuffer);
-              const metadata = this.parseID3v1(uint8Array);
-              resolve(metadata);
-            };
-            // Read the last 128 bytes of the file
-            reader.readAsArrayBuffer(blob.slice(-128));
-          });
-        } catch (error) {
-          console.warn('Failed to read ID3v1 from end:', error);
-          return null;
-        }
-      },
-
-      // Parse ID3v2 metadata
-      parseID3v2(uint8Array) {
-        const metadata = {};
-        
-        try {
-          console.log('Parsing ID3v2 tag, data length:', uint8Array.length);
-          // ID3v2 header is 10 bytes
-          const majorVersion = uint8Array[3];
-          const flags = uint8Array[5];
-          const size = this.syncSafeInt(uint8Array.slice(6, 10));
-          
-          console.log('ID3v2 version:', majorVersion, 'size:', size);
-          let offset = 10;
-          
-          // Parse frames
-          while (offset < size + 10 && offset < uint8Array.length - 4) {
-            if (offset + 4 > uint8Array.length) break;
-            
-            const frameID = String.fromCharCode(uint8Array[offset], uint8Array[offset + 1], uint8Array[offset + 2], uint8Array[offset + 3]);
-            offset += 4;
-            
-            if (offset + 4 > uint8Array.length) break;
-            
-            const frameSize = this.syncSafeInt(uint8Array.slice(offset, offset + 4));
-            offset += 4;
-            
-            if (offset + 2 > uint8Array.length) break;
-            
-            const flags2 = uint8Array.slice(offset, offset + 2);
-            offset += 2;
-            
-            if (offset + frameSize > uint8Array.length) break;
-            
-            // Extract frame data
-            const frameData = uint8Array.slice(offset, offset + frameSize);
-            
-            // Handle text frames
-            if (frameID === 'TPE1' || frameID === 'TPE2' || frameID === 'TPE3' || frameID === 'TPE4') {
-              // Artist frames
-              const text = this.decodeText(frameData);
-              console.log('Found artist frame:', frameID, 'text:', text);
-              if (text) {
-                if (!metadata.contributingArtists) metadata.contributingArtists = [];
-                metadata.contributingArtists.push(text);
-              }
-            } else if (frameID === 'TIT2') {
-              // Title
-              metadata.title = this.decodeText(frameData);
-              console.log('Found title frame:', frameID, 'text:', metadata.title);
-            } else if (frameID === 'TALB') {
-              // Album
-              metadata.album = this.decodeText(frameData);
-              console.log('Found album frame:', frameID, 'text:', metadata.album);
-            } else if (frameID === 'TYER') {
-              // Year
-              metadata.year = this.decodeText(frameData);
-              console.log('Found year frame:', frameID, 'text:', metadata.year);
-            }
-            
-            offset += frameSize;
-          }
-          
-          // Join contributing artists if multiple
-          if (metadata.contributingArtists && metadata.contributingArtists.length > 0) {
-            metadata.contributingArtists = metadata.contributingArtists.join(', ');
-          }
-          
-        } catch (error) {
-          console.warn('Error parsing ID3v2:', error);
-        }
-        
-        return metadata;
-      },
-
-      // Parse ID3v1 metadata
-      parseID3v1(uint8Array) {
-        const metadata = {};
-        
-        try {
-          console.log('Parsing ID3v1 tag, data length:', uint8Array.length);
-          // ID3v1 is in the last 128 bytes
-          const start = Math.max(0, uint8Array.length - 128);
-          const id3v1Data = uint8Array.slice(start);
-          
-          if (id3v1Data.length < 128) return metadata;
-          
-          // Extract fields (30 bytes each for title, artist, album)
-          const title = this.decodeID3v1Text(id3v1Data.slice(0, 30));
-          const artist = this.decodeID3v1Text(id3v1Data.slice(30, 60));
-          const album = this.decodeID3v1Text(id3v1Data.slice(60, 90));
-          
-          console.log('ID3v1 extracted - title:', title, 'artist:', artist, 'album:', album);
-          
-          if (title) metadata.title = title;
-          if (artist) metadata.contributingArtists = artist;
-          if (album) metadata.album = album;
-          
-        } catch (error) {
-          console.warn('Error parsing ID3v1:', error);
-        }
-        
-        return metadata;
-      },
-
-      // Decode text from ID3v2 frames
-      decodeText(frameData) {
-        if (frameData.length < 1) return null;
-        
-        const encoding = frameData[0];
-        const textData = frameData.slice(1);
-        
-        try {
-          if (encoding === 0 || encoding === 3) {
-            // ISO-8859-1 or UTF-8
-            return new TextDecoder('utf-8').decode(textData);
-          } else if (encoding === 1) {
-            // UTF-16 with BOM
-            return new TextDecoder('utf-16').decode(textData);
-          } else if (encoding === 2) {
-            // UTF-16BE without BOM
-            return new TextDecoder('utf-16be').decode(textData);
-          }
-        } catch (error) {
-          console.warn('Error decoding text:', error);
-        }
-        
-        return null;
-      },
-
-      // Decode ID3v1 text (simple ASCII)
-      decodeID3v1Text(data) {
-        try {
-          const text = new TextDecoder('ascii').decode(data);
-          return text.replace(/\0+$/, '').trim(); // Remove null bytes and trim
-        } catch (error) {
-          return null;
-        }
-      },
-
-      // Convert sync-safe integer (ID3v2 size format)
-      syncSafeInt(bytes) {
-        return (bytes[0] << 21) + (bytes[1] << 14) + (bytes[2] << 7) + bytes[3];
-      },
-
       startVolumeVisualizer() {
         const canvas = this.$refs.volumeViz;
         if (!canvas) return;
@@ -1816,27 +1587,9 @@ new Vue({
           name: songData.title || "Unknown Title",
           cover: coverUrl,
           source: songData.audioUrl || songData.filename,
-          favorited: false,
-          contributingArtists: null
+          favorited: false
         };
         this.currentAlbumArt = this.currentTrack.cover;
-        
-        // Extract ID3 metadata if we have an audio source
-        if (this.audio && this.audio.src) {
-          try {
-            console.log('Attempting to extract metadata from:', this.audio.src);
-            const metadata = await this.extractID3Metadata(this.audio);
-            console.log('Extracted metadata:', metadata);
-            if (metadata && metadata.contributingArtists) {
-              this.currentTrack.contributingArtists = metadata.contributingArtists;
-              console.log('Set contributing artists:', metadata.contributingArtists);
-            } else {
-              console.log('No contributing artists found in metadata');
-            }
-          } catch (error) {
-            console.warn('Failed to extract metadata:', error);
-          }
-        }
         
         // Smoothly transition background image
         await this.transitionBackgroundImage(this.currentAlbumArt);
@@ -1876,7 +1629,7 @@ new Vue({
         this.preloadAlbumArt(nextSong);
       },
 
-      async playNext() {
+      playNext() {
         if (this.items.length === 0) return;
 
         // Increment currentIndex to get the next song
@@ -1889,8 +1642,11 @@ new Vue({
 
         const song = this.items[this.currentIndex];
         const expectedSrc = song.audioUrl || song.filename;
-        
-        // Set audio source first for metadata extraction
+        this.updateSongInfo({ title: song.title, artist: song.artist });
+
+        // Check if we have a preloaded version of this song
+        // Since we increment currentIndex at the start, the preloaded song
+        // should be at the index we just incremented to
         if (this.nextBufferedForIndex === this.currentIndex &&
             this.normalizeMatch(this.bufferPlayer.src, expectedSrc) &&
             this.bufferPlayer.readyState >= 2) {
@@ -1900,9 +1656,6 @@ new Vue({
           this.audio.src = expectedSrc;
           console.log('Loading fresh audio for:', song.title);
         }
-        
-        // Update song info after setting audio source (this will extract metadata)
-        await this.updateSongInfo({ title: song.title, artist: song.artist });
 
         this.nextPreloadStarted = false;
         this.nextBufferedForIndex = -1;
@@ -1910,11 +1663,7 @@ new Vue({
         this.audio.onerror = () => {
           console.error('Failed to load audio:', song.title);
           this.currentIndex++;
-          setTimeout(() => {
-            this.playNext().catch(error => {
-              console.warn('Error in error handler playNext:', error);
-            });
-          }, 1000);
+          setTimeout(() => this.playNext(), 1000);
         };
 
         this.audio.oncanplay = () => {
@@ -1928,11 +1677,11 @@ new Vue({
         };
       },
 
-      async playPrev() {
+      playPrev() {
         // Decrement currentIndex by 2 to go back one song
         // (since playNext will increment it by 1)
         this.currentIndex = Math.max(0, this.currentIndex - 2);
-        await this.playNext();
+        this.playNext();
       },
 
       play() {
@@ -1974,14 +1723,14 @@ new Vue({
         this.audio.play();
       },
 
-      async prevTrack() {
+      prevTrack() {
         this.transitionName = "scale-in";
-        await this.playPrev();
+        this.playPrev();
       },
 
-      async nextTrack() {
+      nextTrack() {
         this.transitionName = "scale-out";
-        await this.playNext();
+        this.playNext();
       },
 
       favorite() {
@@ -2092,16 +1841,16 @@ new Vue({
           // Set the current index to play this track
           this.currentIndex = actualIndex;
           
-          // Set the audio source first so metadata extraction can work
-          this.audio.src = track.audioUrl || track.filename;
-          this.audio.load();
-          
-          // Update the current track info (this will now extract metadata)
+          // Update the current track info
           await this.updateSongInfo({
             title: track.title,
             artist: track.artist,
             album: track.album
           });
+          
+          // Set the audio source and play
+          this.audio.src = track.audioUrl || track.filename;
+          this.audio.load();
           
           // Play the track
           this.play();
@@ -2153,12 +1902,11 @@ new Vue({
         vm.updateProgress();
       };
       
-        this.audio.onended = function() {
-          vm.playNext().then(() => {
-            vm.isTimerPlaying = true;
-            vm.isPlaying = true;
-          });
-        };
+      this.audio.onended = function() {
+        vm.playNext();
+        vm.isTimerPlaying = true;
+        vm.isPlaying = true;
+      };
 
       // Initialize player
       await this.initPlayer();
@@ -2186,9 +1934,7 @@ new Vue({
       // Fallback: Check if song has ended but event didn't fire
       setInterval(() => {
         if (this.isPlaying && this.audio.duration && this.audio.currentTime >= this.audio.duration - 0.1) {
-          this.playNext().catch(error => {
-            console.warn('Error in fallback playNext:', error);
-          });
+          this.playNext();
         }
       }, 1000);
     }
