@@ -543,10 +543,7 @@ body {
   flex-shrink: 0;
 }
 
-.listeners-text {
-  font-family: 'Bitter', serif;
-  opacity: 0.85;
-}
+
 
 @media screen and (max-width: 576px), (max-height: 500px) {
   .fullscreen-btn {
@@ -993,11 +990,7 @@ body {
         <i class="fa-solid fa-expand"></i>
     </button>
 
-    <div class="live-count">
-        <div class="live-indicator"></div>
-        <span id="livecount">0</span>
-        <span class="listeners-text">listeners</span>
-    </div>
+ 
 
     <div class="background">
         <img src="" id="bg-img">
@@ -1526,14 +1519,125 @@ new Vue({
       async searchSpotifyAlbumArt(songTitle, artistName) {
         try {
           const token = await this.getSpotifyToken();
-          const query = encodeURIComponent(`${songTitle} ${artistName}`);
-          const res = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=track&limit=1`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          const data = await res.json();
-          if (data.tracks.items.length > 0) return data.tracks.items[0].album.images[0].url;
-        } catch {}
+          
+          // Clean the input strings for better matching
+          const cleanTitle = songTitle.replace(/[^\w\s]/g, '').trim();
+          const cleanArtist = artistName.replace(/[^\w\s]/g, '').trim();
+          
+          // Try multiple search strategies for better matching
+          const searchStrategies = [
+            // Strategy 1: Exact match with quotes for precise matching
+            `"${songTitle}" artist:"${artistName}"`,
+            // Strategy 2: Track name with artist
+            `track:"${songTitle}" artist:"${artistName}"`,
+            // Strategy 3: Cleaned version without special characters
+            `"${cleanTitle}" artist:"${cleanArtist}"`,
+            // Strategy 4: Simple combination
+            `${songTitle} ${artistName}`,
+            // Strategy 5: Cleaned simple combination
+            `${cleanTitle} ${cleanArtist}`,
+            // Strategy 6: Just the song title if artist search fails
+            `"${songTitle}"`,
+            // Strategy 7: Cleaned song title
+            `"${cleanTitle}"`,
+            // Strategy 8: Fallback to just song title
+            songTitle,
+            // Strategy 9: Final fallback to cleaned title
+            cleanTitle
+          ];
+          
+          for (const strategy of searchStrategies) {
+            try {
+              const query = encodeURIComponent(strategy);
+              const res = await fetch(`https://api.spotify.com/v1/search?q=${query}&type=track&limit=5`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+              });
+              const data = await res.json();
+              
+              if (data.tracks.items.length > 0) {
+                // Find the best match by comparing titles and artists
+                const bestMatch = this.findBestMatch(data.tracks.items, songTitle, artistName);
+                if (bestMatch) {
+                  console.log(`✅ Found album art for: "${songTitle}" by "${artistName}" using strategy: "${strategy}"`);
+                  console.log(`   Matched: "${bestMatch.name}" by "${bestMatch.artists[0]?.name}"`);
+                  return bestMatch.album.images[0].url;
+                } else {
+                  console.log(`❌ No good match found for: "${songTitle}" by "${artistName}" using strategy: "${strategy}"`);
+                  console.log(`   Available tracks:`, data.tracks.items.map(t => `"${t.name}" by "${t.artists[0]?.name}"`));
+                }
+              }
+            } catch (error) {
+              console.warn(`Search strategy failed: ${strategy}`, error);
+              continue;
+            }
+          }
+        } catch (error) {
+          console.warn('Spotify API error:', error);
+        }
         return this.getFallbackAlbumArt();
+      },
+
+      cleanString(str) {
+        if (!str) return '';
+        return str
+          .toLowerCase()
+          .trim()
+          .replace(/[^\w\s]/g, '') // Remove special characters
+          .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+          .trim();
+      },
+
+      findBestMatch(tracks, songTitle, artistName) {
+        if (!tracks || tracks.length === 0) return null;
+        
+        const normalizedTitle = this.cleanString(songTitle);
+        const normalizedArtist = this.cleanString(artistName);
+        
+        // Score each track based on title and artist similarity
+        const scoredTracks = tracks.map(track => {
+          const trackTitle = this.cleanString(track.name);
+          const trackArtist = this.cleanString(track.artists[0]?.name || '');
+          
+          let score = 0;
+          
+          // Exact title match gets highest score
+          if (trackTitle === normalizedTitle) {
+            score += 100;
+          } else if (trackTitle.includes(normalizedTitle) || normalizedTitle.includes(trackTitle)) {
+            score += 80;
+          } else {
+            // Calculate similarity based on common words
+            const titleWords = normalizedTitle.split(/\s+/);
+            const trackWords = trackTitle.split(/\s+/);
+            const commonWords = titleWords.filter(word => trackWords.includes(word));
+            score += (commonWords.length / titleWords.length) * 60;
+          }
+          
+          // Artist match bonus
+          if (trackArtist === normalizedArtist) {
+            score += 50;
+          } else if (trackArtist.includes(normalizedArtist) || normalizedArtist.includes(trackArtist)) {
+            score += 30;
+          } else {
+            // Calculate artist similarity
+            const artistWords = normalizedArtist.split(/\s+/);
+            const trackArtistWords = trackArtist.split(/\s+/);
+            const commonArtistWords = artistWords.filter(word => trackArtistWords.includes(word));
+            score += (commonArtistWords.length / artistWords.length) * 20;
+          }
+          
+          return { track, score };
+        });
+        
+        // Sort by score and return the best match
+        scoredTracks.sort((a, b) => b.score - a.score);
+        
+        // Only return if we have a reasonable match (score > 30)
+        if (scoredTracks[0] && scoredTracks[0].score > 30) {
+          return scoredTracks[0].track;
+        }
+        
+        return null;
       },
 
       getFallbackAlbumArt() {
