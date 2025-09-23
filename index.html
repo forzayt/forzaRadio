@@ -26,6 +26,7 @@
  
 
     <div class="background">
+        <canvas id="bg-blob-canvas"></canvas>
         <img src="" id="bg-img">
     </div>
 
@@ -911,6 +912,10 @@ new Vue({
       // Smoothly transition background image
       async transitionBackgroundImage(newImageUrl) {
         const bgImg = document.getElementById('bg-img');
+        if (window.__bgBlobAnimator) {
+          // Only reset blobs if the image actually changes
+          window.__bgBlobAnimator.setImage(newImageUrl);
+        }
         if (bgImg) {
           // Create a temporary image to preload
           const tempImg = new Image();
@@ -1077,6 +1082,151 @@ new Vue({
     }
   });
   
+  // Evolving gradient blob animator over the background
+  (function() {
+    const canvas = document.getElementById('bg-blob-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const state = {
+      blobs: [],
+      maxBlobsTarget: 4,
+      lastImageUrl: null,
+      tStart: performance.now(),
+      dpr: Math.max(1, Math.min(2, window.devicePixelRatio || 1))
+    };
+
+    function resize() {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const w = parent.clientWidth;
+      const h = parent.clientHeight;
+      canvas.width = Math.round(w * state.dpr);
+      canvas.height = Math.round(h * state.dpr);
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+    }
+
+    function rand(min, max) { return Math.random() * (max - min) + min; }
+
+    function newBlob(fromEdge) {
+      const w = canvas.width, h = canvas.height;
+      const baseSize = Math.min(w, h);
+      const radius = rand(baseSize * 0.08, baseSize * 0.22);
+      // spawn from edges to feel like coming from multiple sides
+      let x, y, vx, vy;
+      const speed = rand(0.02, 0.08) * state.dpr;
+      const edge = fromEdge ?? Math.floor(rand(0, 8));
+      // helper to aim roughly toward center with a bit of randomness
+      function aimTo(cx, cy, jitter = speed * 0.6) {
+        const dx = cx - x;
+        const dy = cy - y;
+        const len = Math.max(1e-4, Math.hypot(dx, dy));
+        vx = (dx / len) * speed + rand(-jitter, jitter);
+        vy = (dy / len) * speed + rand(-jitter, jitter);
+      }
+      if (edge === 0) { // left
+        x = -radius; y = rand(0, h); vx = speed; vy = rand(-speed, speed);
+      } else if (edge === 1) { // right
+        x = w + radius; y = rand(0, h); vx = -speed; vy = rand(-speed, speed);
+      } else if (edge === 2) { // top
+        x = rand(0, w); y = -radius; vx = rand(-speed, speed); vy = speed;
+      } else if (edge === 3) { // bottom
+        x = rand(0, w); y = h + radius; vx = rand(-speed, speed); vy = -speed;
+      } else if (edge === 4) { // top-left corner
+        x = -radius; y = -radius; aimTo(w * 0.35, h * 0.35);
+      } else if (edge === 5) { // top-right corner
+        x = w + radius; y = -radius; aimTo(w * 0.65, h * 0.35);
+      } else if (edge === 6) { // bottom-right corner
+        x = w + radius; y = h + radius; aimTo(w * 0.65, h * 0.65);
+      } else { // bottom-left corner
+        x = -radius; y = h + radius; aimTo(w * 0.35, h * 0.65);
+      }
+      const hueBase = rand(0, 360);
+      return { x, y, vx, vy, r: radius, hueBase, hueDrift: rand(10, 60), life: 0, alpha: rand(0.08, 0.16) };
+    }
+
+    function tick(now) {
+      const w = canvas.width, h = canvas.height;
+      // Gradually increase target blob count over time
+      const elapsed = (now - state.tStart) / 1000;
+      state.maxBlobsTarget = Math.min(14, 4 + Math.floor(elapsed / 10));
+
+      // Add new blobs slowly until reaching target
+      if (state.blobs.length < state.maxBlobsTarget && Math.random() < 0.08) {
+        // sometimes spawn a burst from multiple directions including corners
+        const burst = Math.random() < 0.25 ? 1 + Math.floor(rand(1, 3)) : 1;
+        const used = new Set();
+        for (let n = 0; n < burst; n++) {
+          let e;
+          if (Math.random() < 0.4) {
+            // prefer corners sometimes
+            e = 4 + Math.floor(rand(0, 4));
+          } else {
+            e = Math.floor(rand(0, 8));
+          }
+          // avoid exact same direction within a burst
+          let guard = 0;
+          while (used.has(e) && guard++ < 6) e = Math.floor(rand(0, 8));
+          used.add(e);
+          state.blobs.push(newBlob(e));
+        }
+      }
+
+      // soft clear with low alpha to create trails
+      ctx.save();
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'rgba(0,0,0,0.05)';
+      ctx.fillRect(0, 0, w, h);
+      ctx.restore();
+
+      // Blend blobs
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      for (let i = state.blobs.length - 1; i >= 0; i--) {
+        const b = state.blobs[i];
+        b.x += b.vx; b.y += b.vy; b.life += 0.005;
+        const hue = (b.hueBase + Math.sin(b.life) * b.hueDrift + (elapsed * 6)) % 360;
+        const grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+        grad.addColorStop(0, `hsla(${hue}, 85%, 60%, ${b.alpha})`);
+        grad.addColorStop(1, `hsla(${hue}, 85%, 60%, 0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // remove blobs once far outside view to keep count stable
+        if (b.x < -b.r * 2 || b.x > w + b.r * 2 || b.y < -b.r * 2 || b.y > h + b.r * 2) {
+          state.blobs.splice(i, 1);
+        }
+      }
+      ctx.restore();
+
+      requestAnimationFrame(tick);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    requestAnimationFrame(tick);
+
+    // Public minimal API to react to background image changes
+    window.__bgBlobAnimator = {
+      setImage(url) {
+        if (!url) return;
+        if (state.lastImageUrl === url) {
+          // same image: gently add a couple of new blobs instead of reset
+          for (let i = 0; i < 2; i++) state.blobs.push(newBlob());
+          return;
+        }
+        state.lastImageUrl = url;
+        // soft reset: keep a few blobs and re-seed colors
+        state.blobs = state.blobs.slice(-3);
+        state.tStart = performance.now();
+        for (let i = 0; i < 3; i++) state.blobs.push(newBlob());
+      }
+    };
+  })();
+
     </script>
 </body>
 
