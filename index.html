@@ -511,6 +511,17 @@ new Vue({
         cancelAnimationFrame(this.vizRafId);
         this.vizRafId = requestAnimationFrame(draw);
       },
+      stopVolumeVisualizer() {
+        if (this.vizRafId) {
+          cancelAnimationFrame(this.vizRafId);
+          this.vizRafId = null;
+        }
+        const canvas = this.$refs.volumeViz;
+        if (canvas) {
+          const ctx = canvas.getContext('2d');
+          if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      },
 
       formatTime(seconds) {
         if (isNaN(seconds)) return "0:00";
@@ -834,6 +845,7 @@ new Vue({
           this.audio.pause();
           this.isTimerPlaying = false;
           this.isPlaying = false;
+          this.stopVolumeVisualizer();
         }
       },
 
@@ -1072,6 +1084,20 @@ new Vue({
           canvas.height = canvas.parentElement.clientHeight;
         }
       });
+      // Pause visuals when tab hidden; resume on focus
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          this.stopVolumeVisualizer();
+          if (window.__bgBlobAnimator && window.__bgBlobAnimator.pause) {
+            window.__bgBlobAnimator.pause();
+          }
+        } else {
+          if (this.isPlaying) this.startVolumeVisualizer();
+          if (window.__bgBlobAnimator && window.__bgBlobAnimator.resume) {
+            window.__bgBlobAnimator.resume();
+          }
+        }
+      });
 
       // Fallback: Check if song has ended but event didn't fire
       setInterval(() => {
@@ -1093,7 +1119,9 @@ new Vue({
       maxBlobsTarget: 4,
       lastImageUrl: null,
       tStart: performance.now(),
-      dpr: Math.max(1, Math.min(2, window.devicePixelRatio || 1))
+      dpr: Math.max(1, Math.min(2, window.devicePixelRatio || 1)),
+      running: true,
+      lastFrame: 0
     };
 
     function resize() {
@@ -1147,10 +1175,14 @@ new Vue({
     }
 
     function tick(now) {
+      if (!state.running) { requestAnimationFrame(tick); return; }
       const w = canvas.width, h = canvas.height;
+      // Throttle to ~30fps
+      if (now - state.lastFrame < 33) { requestAnimationFrame(tick); return; }
+      state.lastFrame = now;
       // Gradually increase target blob count over time
       const elapsed = (now - state.tStart) / 1000;
-      state.maxBlobsTarget = Math.min(14, 4 + Math.floor(elapsed / 10));
+      state.maxBlobsTarget = Math.min(10, 4 + Math.floor(elapsed / 12));
 
       // Add new blobs slowly until reaching target
       if (state.blobs.length < state.maxBlobsTarget && Math.random() < 0.08) {
@@ -1223,8 +1255,18 @@ new Vue({
         state.blobs = state.blobs.slice(-3);
         state.tStart = performance.now();
         for (let i = 0; i < 3; i++) state.blobs.push(newBlob());
-      }
+      },
+      pause() { state.running = false; },
+      resume() { state.running = true; state.lastFrame = 0; }
     };
+
+    // Respect prefers-reduced-motion
+    try {
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const apply = () => { if (mq.matches) window.__bgBlobAnimator.pause(); };
+      if (mq.addEventListener) mq.addEventListener('change', apply); else if (mq.addListener) mq.addListener(apply);
+      apply();
+    } catch (e) {}
   })();
 
     </script>
